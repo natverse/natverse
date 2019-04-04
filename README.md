@@ -10,7 +10,7 @@ See https://jefferis.github.io/nat/ for more details.
 ## Installation
 
 ``` r
-devtools::instalL_github("SridharJagannathan/natverse")
+devtools::install_github("SridharJagannathan/natverse")
 ```
 
 ## Example
