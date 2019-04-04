@@ -3,9 +3,9 @@ Type: Package
 Title: Install all NeuroAnatomy Toolbox packages
 Version: 0.1.0
 Authors@R: c(person("Gregory","Jefferis", email="jefferis@gmail.com", 
-    role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0587-9355")),
-    person("Gregory","Jefferis", email="jefferis@gmail.com", 
-    role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0587-9355")))
+    role = c("aut"), comment = c(ORCID = "0000-0002-0587-9355")),
+    person("Sridhar","Jagannathan", email="j.sridharrajan@gmail.com", 
+    role = c("aut", "cre"), comment = c(ORCID = "0000-0002-2078-1145")))
 Description: Installs all nat packages and friends in one go. This includes
     both CRAN and github only packages.
 License: GPL-3
@@ -13,3 +13,4 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/SridharJagannathan/natverse
 BugReports: https://github.com/SridharJagannathan/natverse/issues
+RoxygenNote: 6.1.1
