@@ -13,6 +13,7 @@ Installs all nat packages and friends in one go. This includes
 Useful links:
 \itemize{
   \item \url{https://github.com/SridharJagannathan/natverse}
+  \item \url{https://jefferis.github.io/nat/}
   \item Report bugs at \url{https://github.com/SridharJagannathan/natverse/issues}
 }
 
