@@ -6,8 +6,8 @@ Authors@R: c(person("Gregory","Jefferis", email="jefferis@gmail.com",
     role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0587-9355")),
     person("Gregory","Jefferis", email="jefferis@gmail.com", 
     role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0587-9355")))
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Installs all nat packages and friends in one go. This includes
+    both CRAN and github only packages.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
