@@ -11,3 +11,5 @@ Description: Installs all nat packages and friends in one go. This includes
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/SridharJagannathan/natverse
+BugReports: https://github.com/SridharJagannathan/natverse/issues
