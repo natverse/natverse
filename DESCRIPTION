@@ -11,6 +11,18 @@ Description: Installs all nat packages and friends in one go. This includes
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/SridharJagannathan/natverse
+URL: https://github.com/SridharJagannathan/natverse, https://jefferis.github.io/nat/
 BugReports: https://github.com/SridharJagannathan/natverse/issues
 RoxygenNote: 6.1.1
+Depends: 
+    nat,
+    elmr
+Imports:
+    fafbseg,
+    drvid,
+    neuprintr
+Remotes: jefferis/nat,
+    jefferis/elmr,
+    jefferis/fafbseg,
+    jefferis/drvid,
+    jefferislab/neuprintr
