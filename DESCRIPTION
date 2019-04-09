@@ -15,10 +15,10 @@ URL: https://github.com/SridharJagannathan/natverse, https://jefferis.github.io/
 BugReports: https://github.com/SridharJagannathan/natverse/issues
 RoxygenNote: 6.1.1
 Depends: 
-    R (>= 3.1)
-Imports:
+    R (>= 3.1),
     nat,
     elmr,
+Imports:
     fafbseg,
     drvid,
     neuprintr
