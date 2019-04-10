@@ -21,7 +21,11 @@ Depends:
 Imports:
     fafbseg,
     drvid,
-    neuprintr
+    neuprintr,
+    cli (>= 1.0.0),
+    crayon (>= 1.3.4),
+    purrr (>= 0.2.4),
+    magrittr (>= 1.5)
 Remotes: jefferis/nat,
     jefferis/elmr,
     jefferis/fafbseg,
