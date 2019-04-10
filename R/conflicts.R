@@ -102,6 +102,7 @@ natverse_conflict_message <- function(x) {
   paste0(header, "\n", bullets)
 }
 
+#' @export
 print.natverse_conflicts <- function(x, ..., startup = FALSE) {
   cli::cat_line(natverse_conflict_message(x))
 }
