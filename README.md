@@ -22,3 +22,9 @@ library(natverse)
 ## basic example code
 ```
 
+The conflicts created by natverse with other packages can be seen with `natverse_conflicts()`:
+
+```{r conflicts}
+natverse_conflicts()
+```
+
