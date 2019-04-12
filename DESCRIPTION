@@ -6,8 +6,9 @@ Authors@R: c(person("Gregory","Jefferis", email="jefferis@gmail.com",
     role = c("aut"), comment = c(ORCID = "0000-0002-0587-9355")),
     person("Sridhar","Jagannathan", email="j.sridharrajan@gmail.com", 
     role = c("aut", "cre"), comment = c(ORCID = "0000-0002-2078-1145")))
-Description: Installs all nat packages and friends in one go. This includes
-    both CRAN and github only packages.
+Description: Provides functionality for installing and updating all nat packages and friends in one go. This includes
+    both CRAN and github only packages. Other functionalities like checking conflicts are also provided. Inspired from
+    tidyverse and dtpupdate packages.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -22,10 +23,15 @@ Imports:
     fafbseg,
     drvid,
     neuprintr,
+    pbapply,
     cli (>= 1.0.0),
     crayon (>= 1.3.4),
     purrr (>= 0.2.4),
-    magrittr (>= 1.5)
+    magrittr (>= 1.5),
+    stringr (>= 1.3.0),
+    tibble (>= 1.4.2),
+    dplyr,
+    knitr
 Remotes: jefferis/nat,
     jefferis/elmr,
     jefferis/fafbseg,

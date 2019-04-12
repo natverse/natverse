@@ -42,3 +42,16 @@ The conflicts created by `natverse` with other packages can be seen with
 ```{r conflicts}
 natverse_conflicts()
 ```
+
+You can check if all the packages within `natverse` are uptodate with:
+
+1.For dependencies installed via CRAN use
+
+```{r updates_CRAN}
+natverse_update(source = 'CRAN')
+```
+2.For dependencies installed via GitHub use
+```{r updates_GitHub}
+natverse_update(source = 'GITHUB')
+```
+
