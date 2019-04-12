@@ -17,7 +17,8 @@ natverse_conflicts <- function() {
   conflicts <- purrr::keep(conflicts, ~any(.x %in% nat_names)) #isolate only those conflicted by natverse (dependencies and imports)
   conflict_funs <- purrr::imap(conflicts, confirm_conflict)
   conflict_funs <- purrr::compact(conflict_funs) #remove the zero entries..
-  structure(conflict_funs, class = "natverse_conflicts") #for printing the conflicts in a pretty manner
+  structure(conflict_funs, class = "natverse_conflicts") #for printing the conflicts in a pretty manner, add an atribute which is
+                                                        #natverse_conflicts and return the struct which actually prints it
 
 
 }
@@ -84,15 +85,17 @@ natverse_conflict_message <- function(x) {
     right = "natverse_conflicts()"
   )
 
-  pkgs <- x %>% purrr::map(~ gsub("^package:", "", .))
-  others <- pkgs %>% purrr::map(`[`, -1)
+  pkgs <- x %>% purrr::map(~ gsub("^package:", "", .)) #replace the word 'package:' by '' that occurs in beginning of string
+  others <- pkgs %>% purrr::map(`[`, -1) #subset and remove the first element from each list as it was the actual winner with the first priority
+
+  #just format it in the way of function::package()
   other_calls <- purrr::map2_chr(
     others, names(others),
     ~ paste0(crayon::blue(.x), "::", .y, "()", collapse = ", ")
   )
 
-  winner <- pkgs %>% purrr::map_chr(1)
-  funs <- format(paste0(crayon::blue(winner), "::", crayon::green(paste0(names(x), "()"))))
+  winner <- pkgs %>% purrr::map_chr(1) #take only the first element now which was the actual winner with first priority
+  funs <- format(paste0(crayon::blue(winner), "::", crayon::green(paste0(names(x), "()")))) #place the winner again in the format function::package()
   bullets <- paste0(
     crayon::red(cli::symbol$cross), " ", funs,
     " masks ", other_calls,
