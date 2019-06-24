@@ -97,6 +97,8 @@ natverse_deps <- function(recursive = FALSE) {
 
   pkg_deps <- setdiff(pkg_deps, github_pksgs) #just ignore the github packages..
 
+  pkg_deps <- intersect(pkg_deps,pkgs[,"Package"]) #added for testing examples from devtools::check()
+
   cran_version <- lapply(pkgs[pkg_deps, "Version"], base::package_version) #get the version number for the dependent packages in r format..
   local_version <- lapply(pkg_deps, utils::packageVersion) #get the version number for the dependent packages in r format..
 
