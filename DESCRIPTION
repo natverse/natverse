@@ -31,7 +31,9 @@ Imports:
     stringr (>= 1.3.0),
     tibble (>= 1.4.2),
     dplyr,
-    knitr
+    knitr,
+    DependenciesGraphs,
+    visNetwork(>= 0.2.1)
 Remotes: jefferis/nat,
     jefferis/elmr,
     jefferis/fafbseg,
