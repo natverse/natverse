@@ -20,7 +20,8 @@ list_corenatsupportpackages <- function(){
 #' @param color_list : Name of color to use
 #' @return List to graph
 #' @examples
-#'
+#' if (!require(DependenciesGraphs)) utils::install.packages("DependenciesGraphs")
+#' if (!require(visNetwork)) utils::install.packages("visNetwork")
 #' dep <- dependency_visualization('natverse', level = 'level_1')
 #'
 #' @export
@@ -41,6 +42,7 @@ dependency_visualization <- function(Packages = "All", level = c('level_1','leve
                         as.character(link[which(link[, 2] %in% tempval), 1]))
         level2_packages <- intersect(level2_packages,union(list_corenatsupportpackages(),nat_packages))
         packages.view <- c(level2_packages,packages.view)
+        #packages.view <- setdiff(packages.view,'natverse')
     }
 
   }
@@ -71,7 +73,8 @@ dependency_visualization <- function(Packages = "All", level = c('level_1','leve
 #' @param height : Height (optional, defaults to automatic sizing)
 #'
 #' @examples
-#'
+#' if (!require(DependenciesGraphs)) install.packages("DependenciesGraphs")
+#' if (!require(visNetwork)) install.packages("visNetwork")
 #' dep <- dependency_visualization('natverse', level = 'level_1')
 #' dependency_plot(dep)
 #'
@@ -115,7 +118,7 @@ dependency_plot <- function(object, block = FALSE, width = NULL, height = NULL) 
 
   ledges <- data.frame(color = usecolorlist,label = uselabellist)
 
-  lnodes <- data.frame(label = c('external', 'nat_pack'),color = c("lightblue", "slategrey"))
+  lnodes <- data.frame(label = c('external', 'nat_pack'),color = c("slategrey", "lightblue"))
   nodes$title <- 'NA'
   for (i in 1:nrow(nodes)){
     pckg_descpription <- gsub('\n\\s+', ' ', utils::packageDescription(pkg = nodes$label[i],
@@ -135,8 +138,8 @@ dependency_plot <- function(object, block = FALSE, width = NULL, height = NULL) 
 
   visNetwork::visNetwork(nodes, edges, width = width, height = height) %>%
     visNetwork::visEdges(arrows = "middle") %>%
-    visNetwork::visGroups(groupname = "nat_pack", color = "slategrey") %>%
-    visNetwork::visGroups(groupname = "external", color = "lightblue")  %>%
+    visNetwork::visGroups(groupname = "nat_pack", color = "lightblue") %>%
+    visNetwork::visGroups(groupname = "external", color = "slategrey")  %>%
     visNetwork::visGroups(groupname = "nat", color = "yellow")  %>%
     visNetwork::visLegend(addEdges = ledges, addNodes = lnodes, useGroups = FALSE,width = 0.1) %>%
     visNetwork::visOptions(highlightNearest = TRUE, nodesIdSelection = TRUE) %>%
