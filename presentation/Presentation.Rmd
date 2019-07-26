@@ -1,0 +1,178 @@
+---
+title: "**Natverse**"
+subtitle: "*Collection of neuroanatomical packages*"
+author: "Sridhar Jagannathan"
+institute: "Department of Zoology<br/>MRC LMB<br/>University of Cambridge"
+date: "`r Sys.Date()`"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+class: inverse, center, middle
+
+# Motivation
+
+---
+# Why?
+--
+
+* **`nat`** $\rightarrow$ *`nat`, `elmr`, `catmaid`, `nat.nblast`, ... `catnat`*
+
+--
+
+* **Knowledge gap**<br/>
+<center>
+      ![](./dont_know_meme.png)
+<center>
+
+--
+
+---
+class: inverse, middle, center
+
+# multiverse
+
+---
+
+```{r, echo=FALSE}
+htmltools::tags$iframe(id="frame1", title = "Multiverse", src = "nat_packages_all.html", 
+                       width = "800px", height = "550px")
+```
+
+
+---
+
+# `tidyverse`
+
+* **Ease of installation, maintenance**<sup>1</sup>
+<br/><br/>
+
+<center>
+      ![](./tidyverse.png)
+<center>
+
+<div align="left">
+
+.footnote[ [1] Tidyverse rationale [#1](https://rviews.rstudio.com/2017/06/08/what-is-the-tidyverse/)]
+
+</div>
+
+---
+class: inverse, middle, center
+
+# Enter natverse
+
+---
+
+background-image: url("./natverse_logo.png")
+background-size: 30%
+
+---
+
+
+```{r, echo=FALSE}
+htmltools::tags$iframe(id="frame2", title = "natverse", src = "natverse_packages_all.html", 
+                       width = "800px%", height = "550px")
+```
+
+
+---
+
+# Hello World
+
+Install the **natverse** package from [Github](https://github.com/SridharJagannathan/natverse/):
+
+```{r eval=FALSE, tidy=FALSE}
+devtools::install_github("SridharJagannathan/natverse")
+```
+
+--
+
+Prerequisites.
+
+- Recommended to use [R-studio](https://www.rstudio.com/)
+
+- Install `devtools` from [CRAN](https://cran.r-project.org/) beforehand
+```{r eval=FALSE, tidy=FALSE}
+ install.packages("devtools") 
+```
+
+--
+
+---
+class: inverse, middle, center
+
+# Using natverse
+
+---
+
+- **loading**
+
+```{r eval=FALSE, tidy=FALSE}
+ library(natverse) 
+```
+
+```{r include=FALSE, results='hide'}
+ library(natverse) 
+```
+
+- **finding conflicts**
+
+    The conflicts created by `natverse` with other packages can be seen with
+
+```{r echo=TRUE, tidy=FALSE}
+ natverse_conflicts()
+```
+
+---
+**updating packages: **
+
+For dependencies installed via [CRAN](https://cran.r-project.org/) use
+    
+```{r eval=FALSE, tidy=FALSE}
+ natverse_update(source = 'CRAN')
+```
+    
+For dependencies installed via [Github](https://github.com/) use
+    
+```{r eval=FALSE, tidy=FALSE}
+ natverse_update(source = 'GITHUB')
+```
+
+---
+
+# Thanks!
+
+The **natverse** package was influenced by, 
+
+- [Tidyverse](https://www.tidyverse.org/) (opinionated collection of essentials)
+
+- [dtupdate](https://github.com/hrbrmstr/dtupdate) (Keep Up-To-Date with Non-CRAN Package Updates)
+
+- [hexSticker](https://github.com/GuangchuangYu/hexSticker) (Create hex logos from png)
+
+- Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).
+
+---
+
+# Thanks!
+
+This work was supported by,
+
+- [Gregory Jefferis](https://www2.mrc-lmb.cam.ac.uk/group-leaders/h-to-m/gregory-jefferis/)
+
+- [Alexander Bates](http://flybrain.mrc-lmb.cam.ac.uk/jefferislabwebsite/people/)
+
+- [Philipp Schlegel](http://flybrain.mrc-lmb.cam.ac.uk/jefferislabwebsite/people/)
+
+- [Marta Costa](https://www.zoo.cam.ac.uk/directory/marta-costa)
+
