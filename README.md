@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![Github All Releases](https://img.shields.io/github/downloads/natverse/natverse/total.svg)]()
+
 <!-- badges: end -->
 
 The goal of natverse is to install all of the commonly used NeuroAnatomy
