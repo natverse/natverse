@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# natverse <a href='https://natverse.github.io/'><img src='presentation/natverse_logo.png' align="right" height="138.5" /></a>
+# natverse <a href='https://natverse.github.io/'><img src='https://github.com/natverse/natverse_hugo/blob/dev_pages/static/images/hex-natverse_logo.png' align="right" height="138.5" /></a>
 
 <!-- badges: start -->
 
