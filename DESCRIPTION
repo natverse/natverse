@@ -39,7 +39,9 @@ Suggests:
     hexSticker,
     ggplot2,
     here,
-    png
+    png,
+    natverse/insectbrainr,
+    natverse/fishatlas
 Remotes: jefferis/nat,
     jefferis/elmr,
     jefferis/fafbseg,
