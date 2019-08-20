@@ -5,7 +5,6 @@
 
 <!-- badges: start -->
 
-[![Github All Releases](https://img.shields.io/github/downloads/natverse/natverse/total.svg)]()
 
 <!-- badges: end -->
 
