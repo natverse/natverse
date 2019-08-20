@@ -11,15 +11,15 @@
 The goal of natverse is to install all of the commonly used NeuroAnatomy
 Toolbox packages.
 
-See <https://jefferis.github.io/nat/> for more details.
+See <https://natverse.github.io/nat/> for more details.
 
 ## Installation
 
 You can install the latest version as shown below:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("SridharJagannathan/natverse")
+# install.packages("remotes")
+remotes::install_github("natverse/natverse")
 ```
 
 ## Example
