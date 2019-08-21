@@ -70,8 +70,12 @@ natverse_deps <- function(recursive = FALSE) {
 
   #set the location of the repository or else you get complaints from knitr and examples
   r = getOption("repos")
-  r["CRAN"] = "http://cran.us.r-project.org"
-  options(repos = r)
+  if(isTRUE(is.na(r["CRAN"])) || "@CRAN@" %in% r) {
+    # CRAN option completely unset or has signalling value
+    r["CRAN"] = "https://cloud.r-project.org/"
+    op <- options(repos = r)
+    on.exit(options(op))
+  }
 
   pkgs <- utils::available.packages() #list all the packages available in CRAN repositories with row names as pkgnames..
 
