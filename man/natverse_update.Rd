@@ -4,19 +4,24 @@
 \alias{natverse_update}
 \title{Update natverse packages}
 \usage{
-natverse_update(recursive = FALSE, source = "CRAN")
+natverse_update(recursive = FALSE, source = c("CRAN", "GITHUB"))
 }
 \arguments{
-\item{recursive}{If \code{TRUE}, will also check all dependencies of
-natverse packages.}
+\item{recursive}{If \code{TRUE}, will also check all dependencies of natverse
+packages.}
 
-\item{source}{set the source of updates 'CRAN' or 'GITHUB'
-natverse packages.}
+\item{source}{set the source of updates to 'CRAN' or 'GITHUB' natverse
+packages.}
+}
+\value{
+A \code{tibble} detailing dependencies and their status.
 }
 \description{
-This will check to see if all natverse packages (and optionally (if recursive = TRUE), their
-dependencies ) are up-to-date, and will provide the command to perform the installation in one go!
-Adapted and modified from the following sources : update function in 'tidyverse' package, github_update function in 'dtupdate' package
+This will check to see if all natverse packages (and optionally (if recursive
+= TRUE), their dependencies ) are up-to-date, and will provide the command to
+perform the installation in one go! Adapted and modified from the following
+sources : update function in 'tidyverse' package, github_update function in
+'dtupdate' package
 }
 \examples{
 natverse_update()

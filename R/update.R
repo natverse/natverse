@@ -1,64 +1,57 @@
 #' Update natverse packages
 #'
-#' This will check to see if all natverse packages (and optionally (if recursive = TRUE), their
-#' dependencies ) are up-to-date, and will provide the command to perform the installation in one go!
-#' Adapted and modified from the following sources : update function in 'tidyverse' package, github_update function in 'dtupdate' package
+#' This will check to see if all natverse packages (and optionally (if recursive
+#' = TRUE), their dependencies ) are up-to-date, and will provide the command to
+#' perform the installation in one go! Adapted and modified from the following
+#' sources : update function in 'tidyverse' package, github_update function in
+#' 'dtupdate' package
 #'
-#' @param recursive If \code{TRUE}, will also check all dependencies of
-#'   natverse packages.
-#' @param source set the source of updates 'CRAN' or 'GITHUB'
-#'   natverse packages.
+#' @param recursive If \code{TRUE}, will also check all dependencies of natverse
+#'   packages.
+#' @param source set the source of updates to 'CRAN' or 'GITHUB' natverse
+#'   packages.
+#' @return A \code{tibble} detailing dependencies and their status.
 #' @export
 #' @examples
 #' natverse_update()
-natverse_update <- function(recursive = FALSE, source = 'CRAN') {
-
-  if(source == 'CRAN'){deps <- natverse_deps(recursive)} #grab dependicies for packages installed via CRAN
-  else if(source == 'GITHUB'){deps <- natverse_githubdeps(recursive)} #grab dependicies for packages installed via GitHub
-  else{
-    cli::cat_line("You should provide option of source as 'CRAN' or 'GITHUB' to update..")
+natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
+  source=match.arg(source)
+  if (source == 'CRAN') {
+    deps <- natverse_deps(recursive)
+  } else if (source == 'GITHUB') {
+    deps <- natverse_githubdeps(recursive)
   }
 
   behind_temp <- dplyr::filter(deps, deps$behind)
   deps$status <- paste0(crayon::green(cli::symbol$tick))
-  deps[deps$behind,"status"] <- paste0(crayon::red(cli::symbol$cross))
+  deps[deps$behind & !is.na(deps$behind), "status"] <- paste0(crayon::red(cli::symbol$cross))
+  # NB fancy question marks always seem to be red
+  deps[is.na(deps$behind), "status"] <- cli::symbol$fancy_question_mark
   deps$behind <- NULL
 
   if (nrow(behind_temp) == 0) {
     cli::cat_line(paste("\nAll natverse dependencies from", source, "are up-to-date, see details below:"))
     cli::cat_line()
-    if(source == 'CRAN'){
-      cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
-      }
-    else if(source == 'GITHUB'){
-      cli::cat_line(format(knitr::kable(deps,format = "pandoc")))}
-    return(invisible())
+    cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
+    return(invisible(deps))
   }
 
   cli::cat_line(paste("\nThe following natverse dependencies from", source, "are out-of-date, see details below:"))
   cli::cat_line()
-  if(source == 'CRAN'){
-    cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
-    }
-  else if(source == 'GITHUB'){
-    cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
-    }
-
-
+  cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
   cli::cat_line()
   cli::cat_line("Start a clean R session then run:")
 
   if(source == 'CRAN'){
     pkg_str <- paste0(deparse(behind_temp$package), collapse = "\n")
-    cli::cat_line("install.packages(", pkg_str, ")")}
-  else if(source == 'GITHUB'){
-
+    cli::cat_line("install.packages(", pkg_str, ")")
+  } else if(source == 'GITHUB') {
     just_repo <- apply(behind_temp, 1, function(x) {stringr::str_match(x["source"],
                                                          "\\(([[:alnum:]-_\\.]*/[[:alnum:]-_\\.]*)[@[:alnum:]]*")[,2]})
     pkg_str <- paste0(deparse(just_repo), collapse = "\n")
     cli::cat_line("devtools::install_github(", pkg_str, ")")
-    }
-  invisible()
+  }
+  invisible(deps)
 }
 
 ##subfunctions..
@@ -96,10 +89,9 @@ natverse_deps <- function(recursive = FALSE) {
   pkg_deps <- setdiff(pkg_deps, base_pkgs) #just ignore the base packages..
 
   #we also don't want to update the github packages here, so ignore them as well..
-  githubpgks <- natverse_githubdeps()
-  github_pksgs <- githubpgks$package
-
-  pkg_deps <- setdiff(pkg_deps, github_pksgs) #just ignore the github packages..
+  pkgs_local_df <- local_package_info()
+  github_pkgs=pkgs_local_df[grepl('Github', pkgs_local_df$source), 'package']
+  pkg_deps <- setdiff(pkg_deps, github_pkgs) #just ignore the github packages..
 
   pkg_deps <- intersect(pkg_deps,pkgs[,"Package"]) #added for testing examples from devtools::check()
 
@@ -120,20 +112,12 @@ natverse_deps <- function(recursive = FALSE) {
 
 
 
+local_package_info <- function(lib.loc=.libPaths()[1]) {
+  ip=utils::installed.packages(lib.loc = lib.loc)
 
-natverse_githubdeps <- function(recursive = FALSE) {
+  pkgs_local <- sort(ip[,"Package"])
 
-  pkgs <- utils::available.packages() #list all the packages available in CRAN repositories with row names as pkgnames..
-
-
-  pkgs_local <- data.frame(utils::installed.packages(lib=.libPaths()[1]), stringsAsFactors=FALSE)
-  pkgs_local <- pkgs_local$Package
-  pkgs_local <- sort(pkgs_local)
-
-
-  # get pkg info
-
-  desc_local <- lapply(pkgs_local, utils::packageDescription, lib.loc=.libPaths()[1])
+  desc_local <- lapply(pkgs_local, utils::packageDescription, lib.loc=lib.loc)
   version_local <- vapply(desc_local, function(x) x$Version, character(1))
   date_local <- vapply(desc_local, pkg_date, character(1))
   source_local <- vapply(desc_local, pkg_source, character(1))
@@ -142,7 +126,15 @@ natverse_githubdeps <- function(recursive = FALSE) {
                               stringsAsFactors=FALSE, check.names=FALSE)
 
   rownames(pkgs_local_df) <- NULL
+  # harmless, but I don't think this is used anywhere
   class(pkgs_local_df) <- c("githubupdate", "data.frame")
+  pkgs_local_df
+}
+
+natverse_githubdeps <- function(recursive = FALSE) {
+
+  pkgs_local_df <- local_package_info()
+  # get pkg info
 
   if (any(grepl("Github", pkgs_local_df$source))) {
 
@@ -212,7 +204,9 @@ pkg_source <- function (desc)  {
 .get_version <- function(x) {
   url_con <- url(x)
   on.exit(close(url_con))
-  version <- try(as.character(read.dcf(url_con, fields="Version")), silent = TRUE)
+  version <- suppressWarnings(try(
+    as.character(read.dcf(url_con, fields="Version")), silent = TRUE
+    ))
   if (inherits(version, "try-error")) NA else version
 }
 
