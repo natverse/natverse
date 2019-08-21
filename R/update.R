@@ -1,22 +1,24 @@
 #' Update natverse packages
 #'
-#' This will check to see if all natverse packages (and optionally (if recursive = TRUE), their
-#' dependencies ) are up-to-date, and will provide the command to perform the installation in one go!
-#' Adapted and modified from the following sources : update function in 'tidyverse' package, github_update function in 'dtupdate' package
+#' This will check to see if all natverse packages (and optionally (if recursive
+#' = TRUE), their dependencies ) are up-to-date, and will provide the command to
+#' perform the installation in one go! Adapted and modified from the following
+#' sources : update function in 'tidyverse' package, github_update function in
+#' 'dtupdate' package
 #'
-#' @param recursive If \code{TRUE}, will also check all dependencies of
-#'   natverse packages.
-#' @param source set the source of updates 'CRAN' or 'GITHUB'
-#'   natverse packages.
+#' @param recursive If \code{TRUE}, will also check all dependencies of natverse
+#'   packages.
+#' @param source set the source of updates to 'CRAN' or 'GITHUB' natverse
+#'   packages.
 #' @export
 #' @examples
 #' natverse_update()
-natverse_update <- function(recursive = FALSE, source = 'CRAN') {
-
-  if(source == 'CRAN'){deps <- natverse_deps(recursive)} #grab dependicies for packages installed via CRAN
-  else if(source == 'GITHUB'){deps <- natverse_githubdeps(recursive)} #grab dependicies for packages installed via GitHub
-  else{
-    cli::cat_line("You should provide option of source as 'CRAN' or 'GITHUB' to update..")
+natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
+  source=match.arg(source)
+  if (source == 'CRAN') {
+    deps <- natverse_deps(recursive)
+  } else if (source == 'GITHUB') {
+    deps <- natverse_githubdeps(recursive)
   }
 
   behind_temp <- dplyr::filter(deps, deps$behind)
