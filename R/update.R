@@ -70,31 +70,14 @@ natverse_deps <- function(recursive = FALSE) {
     on.exit(options(op))
   }
 
-  pkgs <- utils::available.packages() #list all the packages available in CRAN repositories with row names as pkgnames..
-
-  pkgs_local <- utils::installed.packages() #list all installed packages only, as you will only update packages after installing them?, will be changed once natverse
-                                       #is on CRAN (may be someone updated dependencies alone)..
-
-  deps <- tools::package_dependencies("natverse", pkgs_local, recursive = FALSE) # check only the dependencies of natverse(which is currently local only)
-
-
-  pkg_deps <- unique(sort(unlist(deps))) #just flatten the list
-
-  # we don't want to update base packages, so ignore them, this needs to be checked with Greg..
-  base_pkgs <- c(
-    "base", "compiler", "datasets", "graphics", "grDevices", "grid",
-    "methods", "parallel", "splines", "stats", "stats4", "tools", "tcltk",
-    "utils"
-  )
-  pkg_deps <- setdiff(pkg_deps, base_pkgs) #just ignore the base packages..
+  pkg_deps <- natverse_dep_pkgs()
 
   #we also don't want to update the github packages here, so ignore them as well..
   pkgs_local_df <- local_package_info()
   github_pkgs=pkgs_local_df[grepl('Github', pkgs_local_df$source), 'package']
   pkg_deps <- setdiff(pkg_deps, github_pkgs) #just ignore the github packages..
 
-  pkg_deps <- intersect(pkg_deps,pkgs[,"Package"]) #added for testing examples from devtools::check()
-
+  pkgs <- installed.packages()
   cran_version <- lapply(pkgs[pkg_deps, "Version"], base::package_version) #get the version number for the dependent packages in r format..
   local_version <- lapply(pkg_deps, utils::packageVersion) #get the version number for the dependent packages in r format..
 
@@ -110,7 +93,23 @@ natverse_deps <- function(recursive = FALSE) {
 
 }
 
+# internal function to return names of natverse dependencies
+natverse_dep_pkgs <- function(recursive = FALSE, include.base=FALSE) {
+  pkgs_local <- utils::installed.packages() #list all installed packages only, as you will only update packages after installing them?, will be changed once natverse
+  #is on CRAN (may be someone updated dependencies alone)..
 
+  deps <- tools::package_dependencies("natverse", pkgs_local, recursive = recursive) # check only the dependencies of natverse(which is currently local only)
+
+  pkg_deps <- unique(sort(unlist(deps))) #just flatten the list
+
+  # don't include base by default because they come with each version of R not from CRAN
+  if(isFALSE(include.base)){
+    pkgs <- utils::available.packages() #list all the packages available in CRAN repositories with row names as pkgnames..
+    base_pkgs <- pkgs[pkgs[,'Priority']=='recommended' &!is.na(pkgs[,'Priority']),'Package']
+    pkg_deps <- setdiff(pkg_deps, base_pkgs) #just ignore the base packages..
+  }
+  pkg_deps
+}
 
 local_package_info <- function(lib.loc=.libPaths()[1]) {
   ip=utils::installed.packages(lib.loc = lib.loc)
@@ -134,12 +133,10 @@ local_package_info <- function(lib.loc=.libPaths()[1]) {
 natverse_githubdeps <- function(recursive = FALSE) {
 
   pkgs_local_df <- local_package_info()
-  # get pkg info
 
   if (any(grepl("Github", pkgs_local_df$source))) {
 
     pkgs_local_df <- dplyr::filter(pkgs_local_df, grepl("Github", source))
-
 
     just_repo <- stringr::str_match(pkgs_local_df$source,
                                     "\\(([[:alnum:]-_\\.]*/[[:alnum:]-_\\.]*)[@[:alnum:]]*")[,2]
@@ -155,7 +152,7 @@ natverse_githubdeps <- function(recursive = FALSE) {
 
   behind <- purrr::map2_lgl(github_version, local_version, `>`)
 
-    tibble::tibble(
+  tibble::tibble(
     package = pkgs_local_df$package,
     github = github_version %>% purrr::map_chr(as.character),
     local = local_version %>% purrr::map_chr(as.character),
