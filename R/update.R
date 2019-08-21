@@ -70,8 +70,12 @@ natverse_deps <- function(recursive = FALSE) {
 
   #set the location of the repository or else you get complaints from knitr and examples
   r = getOption("repos")
-  r["CRAN"] = "http://cran.us.r-project.org"
-  options(repos = r)
+  if(isTRUE(is.na(r["CRAN"])) || "@CRAN@" %in% r) {
+    # CRAN option completely unset or has signalling value
+    r["CRAN"] = "https://cloud.r-project.org/"
+    op <- options(repos = r)
+    on.exit(options(op))
+  }
 
   pkgs <- utils::available.packages() #list all the packages available in CRAN repositories with row names as pkgnames..
 
@@ -154,8 +158,8 @@ natverse_githubdeps <- function(recursive = FALSE) {
 
   }
 
-  github_version <- lapply(pkgs_local_df$gh_version, base::package_version) #get the version number for the dependent packages in r format..
-  local_version <- lapply(pkgs_local_df$version, base::package_version) #get the version number for the dependent packages in r format..
+  github_version <- lapply(pkgs_local_df$gh_version, base::package_version, strict = F) #get the version number for the dependent packages in r format..
+  local_version <- lapply(pkgs_local_df$version, base::package_version, strict = F) #get the version number for the dependent packages in r format..
 
   behind <- purrr::map2_lgl(github_version, local_version, `>`)
 
@@ -207,9 +211,9 @@ pkg_source <- function (desc)  {
 
 .get_version <- function(x) {
   url_con <- url(x)
-  res <- as.character(read.dcf(url_con, fields="Version"))
-  close(url_con)
-  res
+  on.exit(close(url_con))
+  version <- try(as.character(read.dcf(url_con, fields="Version")), silent = TRUE)
+  if (inherits(version, "try-error")) NA else version
 }
 
 get_versions <- function(github_user_repo) {
@@ -218,16 +222,7 @@ get_versions <- function(github_user_repo) {
   gh_urls <- sprintf(base_url, github_user_repo)
 
   unlist(
-    pbapply::pbsapply(
-      gh_urls,
-      function(url) {
-        version <- try(.get_version(url), silent=TRUE)
-        version <- if (inherits(version, "try-error")) NA else version
-        version
-      },
-      USE.NAMES=FALSE
-    ),
+    pbapply::pbsapply(gh_urls, .get_version, USE.NAMES = FALSE),
     use.names=FALSE
   )
-
 }
