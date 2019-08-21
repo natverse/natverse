@@ -32,37 +32,25 @@ natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
   if (nrow(behind_temp) == 0) {
     cli::cat_line(paste("\nAll natverse dependencies from", source, "are up-to-date, see details below:"))
     cli::cat_line()
-    if(source == 'CRAN'){
-      cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
-      }
-    else if(source == 'GITHUB'){
-      cli::cat_line(format(knitr::kable(deps,format = "pandoc")))}
+    cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
     return(invisible(deps))
   }
 
   cli::cat_line(paste("\nThe following natverse dependencies from", source, "are out-of-date, see details below:"))
   cli::cat_line()
-  if(source == 'CRAN'){
-    cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
-    }
-  else if(source == 'GITHUB'){
-    cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
-    }
-
-
+  cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
   cli::cat_line()
   cli::cat_line("Start a clean R session then run:")
 
   if(source == 'CRAN'){
     pkg_str <- paste0(deparse(behind_temp$package), collapse = "\n")
-    cli::cat_line("install.packages(", pkg_str, ")")}
-  else if(source == 'GITHUB'){
-
+    cli::cat_line("install.packages(", pkg_str, ")")
+  } else if(source == 'GITHUB') {
     just_repo <- apply(behind_temp, 1, function(x) {stringr::str_match(x["source"],
                                                          "\\(([[:alnum:]-_\\.]*/[[:alnum:]-_\\.]*)[@[:alnum:]]*")[,2]})
     pkg_str <- paste0(deparse(just_repo), collapse = "\n")
     cli::cat_line("devtools::install_github(", pkg_str, ")")
-    }
+  }
   invisible(deps)
 }
 
