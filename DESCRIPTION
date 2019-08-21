@@ -40,11 +40,13 @@ Suggests:
     ggplot2,
     here,
     png,
-    natverse/insectbrainr,
-    natverse/fishatlas
+    insectbrainr,
+    fishatlas
 Remotes: jefferis/nat,
     jefferis/elmr,
     jefferis/fafbseg,
     jefferis/drvid,
-    jefferislab/neuprintr
+    jefferislab/neuprintr,
+    natverse/insectbrainr,
+    natverse/fishatlas,
     datastorm-open/DependenciesGraphs
