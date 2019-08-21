@@ -27,5 +27,10 @@ Authors:
   \item Gregory Jefferis \email{jefferis@gmail.com} (0000-0002-0587-9355)
 }
 
+Other contributors:
+\itemize{
+  \item Alex Bates \email{abates@mrc-lmb.cam.ac.uk} (0000-0002-1195-0445) [contributor]
+}
+
 }
 \keyword{internal}

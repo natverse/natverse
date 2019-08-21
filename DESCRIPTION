@@ -15,7 +15,7 @@ Authors@R:
              comment = c(ORCID = "0000-0002-2078-1145")),
       person(given = "Alex",
              family = "Bates",
-             role = c("aut", "cre"),
+             role = c("ctb"),
              email = "abates@mrc-lmb.cam.ac.uk",
              comment = c(ORCID = "0000-0002-1195-0445")))
 Description: Provides functionality for installing and updating
