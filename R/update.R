@@ -207,9 +207,9 @@ pkg_source <- function (desc)  {
 
 .get_version <- function(x) {
   url_con <- url(x)
-  res <- as.character(read.dcf(url_con, fields="Version"))
-  close(url_con)
-  res
+  on.exit(close(url_con))
+  version <- try(as.character(read.dcf(url_con, fields="Version")), silent = TRUE)
+  if (inherits(version, "try-error")) NA else version
 }
 
 get_versions <- function(github_user_repo) {
@@ -218,16 +218,7 @@ get_versions <- function(github_user_repo) {
   gh_urls <- sprintf(base_url, github_user_repo)
 
   unlist(
-    pbapply::pbsapply(
-      gh_urls,
-      function(url) {
-        version <- try(.get_version(url), silent=TRUE)
-        version <- if (inherits(version, "try-error")) NA else version
-        version
-      },
-      USE.NAMES=FALSE
-    ),
+    pbapply::pbsapply(gh_urls, .get_version, USE.NAMES = FALSE),
     use.names=FALSE
   )
-
 }
