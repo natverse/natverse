@@ -23,7 +23,7 @@ natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
 
   behind_temp <- dplyr::filter(deps, deps$behind)
   deps$status <- paste0(crayon::green(cli::symbol$tick))
-  deps[deps$behind,"status"] <- paste0(crayon::red(cli::symbol$cross))
+  deps[deps$behind & !is.na(deps$behind), "status"] <- paste0(crayon::red(cli::symbol$cross))
   deps$behind <- NULL
 
   if (nrow(behind_temp) == 0) {
