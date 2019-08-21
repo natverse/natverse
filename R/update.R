@@ -217,7 +217,9 @@ pkg_source <- function (desc)  {
 .get_version <- function(x) {
   url_con <- url(x)
   on.exit(close(url_con))
-  version <- try(as.character(read.dcf(url_con, fields="Version")), silent = TRUE)
+  version <- suppressWarnings(try(
+    as.character(read.dcf(url_con, fields="Version")), silent = TRUE
+    ))
   if (inherits(version, "try-error")) NA else version
 }
 
