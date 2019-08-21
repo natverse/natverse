@@ -154,8 +154,8 @@ natverse_githubdeps <- function(recursive = FALSE) {
 
   }
 
-  github_version <- lapply(pkgs_local_df$gh_version, base::package_version) #get the version number for the dependent packages in r format..
-  local_version <- lapply(pkgs_local_df$version, base::package_version) #get the version number for the dependent packages in r format..
+  github_version <- lapply(pkgs_local_df$gh_version, base::package_version, strict = F) #get the version number for the dependent packages in r format..
+  local_version <- lapply(pkgs_local_df$version, base::package_version, strict = F) #get the version number for the dependent packages in r format..
 
   behind <- purrr::map2_lgl(github_version, local_version, `>`)
 
