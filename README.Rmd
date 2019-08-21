@@ -16,6 +16,9 @@ knitr::opts_chunk$set(
 # natverse <a href='https://natverse.github.io/'><img src='man/figures/logo.svg' align="right" height="138.5" /></a>
 
 <!-- badges: start -->
+[![natverse](https://img.shields.io/badge/natverse-Part%20of%20the%20natverse-a241b6)](https://natverse.github.io)
+[![Docs](https://img.shields.io/badge/docs-100%25-brightgreen.svg)](https://natverse.github.io/natverse/reference/)
+[![Travis build status](https://travis-ci.org/natverse/natverse.svg?branch=master)](https://travis-ci.org/natverse/natverse)
 <!-- badges: end -->
 
 The goal of natverse is to install all of the commonly used NeuroAnatomy Toolbox packages.

@@ -3,3 +3,8 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 ^presentation$
+^\.github$
+^\.travis\.yml$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
