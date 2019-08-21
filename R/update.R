@@ -125,20 +125,12 @@ natverse_deps <- function(recursive = FALSE) {
 
 
 
+local_package_info <- function(lib.loc=.libPaths()[1]) {
+  ip=utils::installed.packages(lib.loc = lib.loc)
 
-natverse_githubdeps <- function(recursive = FALSE) {
+  pkgs_local <- sort(ip[,"Package"])
 
-  pkgs <- utils::available.packages() #list all the packages available in CRAN repositories with row names as pkgnames..
-
-
-  pkgs_local <- data.frame(utils::installed.packages(lib=.libPaths()[1]), stringsAsFactors=FALSE)
-  pkgs_local <- pkgs_local$Package
-  pkgs_local <- sort(pkgs_local)
-
-
-  # get pkg info
-
-  desc_local <- lapply(pkgs_local, utils::packageDescription, lib.loc=.libPaths()[1])
+  desc_local <- lapply(pkgs_local, utils::packageDescription, lib.loc=lib.loc)
   version_local <- vapply(desc_local, function(x) x$Version, character(1))
   date_local <- vapply(desc_local, pkg_date, character(1))
   source_local <- vapply(desc_local, pkg_source, character(1))
@@ -147,7 +139,15 @@ natverse_githubdeps <- function(recursive = FALSE) {
                               stringsAsFactors=FALSE, check.names=FALSE)
 
   rownames(pkgs_local_df) <- NULL
+  # harmless, but I don't think this is used anywhere
   class(pkgs_local_df) <- c("githubupdate", "data.frame")
+  pkgs_local_df
+}
+
+natverse_githubdeps <- function(recursive = FALSE) {
+
+  pkgs_local_df <- local_package_info()
+  # get pkg info
 
   if (any(grepl("Github", pkgs_local_df$source))) {
 
