@@ -24,6 +24,8 @@ natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
   behind_temp <- dplyr::filter(deps, deps$behind)
   deps$status <- paste0(crayon::green(cli::symbol$tick))
   deps[deps$behind & !is.na(deps$behind), "status"] <- paste0(crayon::red(cli::symbol$cross))
+  # NB fancy question marks always seem to be red
+  deps[is.na(deps$behind), "status"] <- cli::symbol$fancy_question_mark
   deps$behind <- NULL
 
   if (nrow(behind_temp) == 0) {
