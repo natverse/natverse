@@ -10,6 +10,7 @@
 #'   packages.
 #' @param source set the source of updates to 'CRAN' or 'GITHUB' natverse
 #'   packages.
+#' @return A \code{tibble} detailing dependencies and their status.
 #' @export
 #' @examples
 #' natverse_update()
@@ -36,7 +37,7 @@ natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
       }
     else if(source == 'GITHUB'){
       cli::cat_line(format(knitr::kable(deps,format = "pandoc")))}
-    return(invisible())
+    return(invisible(deps))
   }
 
   cli::cat_line(paste("\nThe following natverse dependencies from", source, "are out-of-date, see details below:"))
@@ -62,7 +63,7 @@ natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
     pkg_str <- paste0(deparse(just_repo), collapse = "\n")
     cli::cat_line("devtools::install_github(", pkg_str, ")")
     }
-  invisible()
+  invisible(deps)
 }
 
 ##subfunctions..
