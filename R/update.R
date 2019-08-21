@@ -101,10 +101,9 @@ natverse_deps <- function(recursive = FALSE) {
   pkg_deps <- setdiff(pkg_deps, base_pkgs) #just ignore the base packages..
 
   #we also don't want to update the github packages here, so ignore them as well..
-  githubpgks <- natverse_githubdeps()
-  github_pksgs <- githubpgks$package
-
-  pkg_deps <- setdiff(pkg_deps, github_pksgs) #just ignore the github packages..
+  pkgs_local_df <- local_package_info()
+  github_pkgs=pkgs_local_df[grepl('Github', pkgs_local_df$source), 'package']
+  pkg_deps <- setdiff(pkg_deps, github_pkgs) #just ignore the github packages..
 
   pkg_deps <- intersect(pkg_deps,pkgs[,"Package"]) #added for testing examples from devtools::check()
 
