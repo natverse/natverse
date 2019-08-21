@@ -6,16 +6,16 @@
 \alias{natverse-package}
 \title{natverse: Install all NeuroAnatomy Toolbox packages}
 \description{
-Provides functionality for installing and updating all nat packages and friends in one go. This includes
-    both CRAN and github only packages. Other functionalities like checking conflicts are also provided. Inspired from
-    tidyverse and dtupdate packages.
+Provides functionality for installing and updating
+    all nat packages and friends in one go. This includes both CRAN and
+    github only packages. Other functionalities like checking conflicts
+    are also provided. Inspired from tidyverse and dtupdate packages.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/SridharJagannathan/natverse}
-  \item \url{https://jefferis.github.io/nat/}
-  \item Report bugs at \url{https://github.com/SridharJagannathan/natverse/issues}
+  \item \url{https://github.com/natverse/natverse}
+  \item Report bugs at \url{https://github.com/natverse/natverse/issues}
 }
 
 }
