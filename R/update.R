@@ -70,7 +70,7 @@ natverse_deps <- function(recursive = FALSE) {
     on.exit(options(op))
   }
 
-  pkg_deps <- natverse_dep_pkgs()
+  pkg_deps <- natverse_dep_pkgs(recursive = recursive)
 
   #we also don't want to update the github packages here, so ignore them as well..
   pkgs_local_df <- local_package_info()
@@ -111,7 +111,7 @@ natverse_dep_pkgs <- function(recursive = FALSE, include.base=FALSE) {
   pkg_deps
 }
 
-local_package_info <- function(lib.loc=.libPaths()[1]) {
+local_package_info <- function(pkgs=NULL, lib.loc=.libPaths()[1]) {
   ip=utils::installed.packages(lib.loc = lib.loc)
 
   pkgs_local <- sort(ip[,"Package"])
@@ -124,6 +124,15 @@ local_package_info <- function(lib.loc=.libPaths()[1]) {
   pkgs_local_df <- data.frame(package=pkgs_local, version=version_local, date=date_local, source=source_local,
                               stringsAsFactors=FALSE, check.names=FALSE)
 
+  if(!is.null(pkgs)) {
+    missing=setdiff(pkgs, pkgs_local_df$package)
+    if(length(missing))
+      message("Unable to find installed package information about:\n",
+              paste(missing, collapse=", "))
+    rownames(pkgs_local_df)=pkgs_local_df$package
+    pkgs_local_df=pkgs_local_df[intersect(pkgs_local_df$package, pkgs), , drop=F]
+  }
+
   rownames(pkgs_local_df) <- NULL
   # harmless, but I don't think this is used anywhere
   class(pkgs_local_df) <- c("githubupdate", "data.frame")
@@ -131,8 +140,8 @@ local_package_info <- function(lib.loc=.libPaths()[1]) {
 }
 
 natverse_githubdeps <- function(recursive = FALSE) {
-
-  pkgs_local_df <- local_package_info()
+  deps=natverse_dep_pkgs(recursive = recursive)
+  pkgs_local_df <- local_package_info(deps)
 
   if (any(grepl("Github", pkgs_local_df$source))) {
 
@@ -149,7 +158,8 @@ natverse_githubdeps <- function(recursive = FALSE) {
 
   github_version <- lapply(pkgs_local_df$gh_version, base::package_version, strict = F) #get the version number for the dependent packages in r format..
   local_version <- lapply(pkgs_local_df$version, base::package_version, strict = F) #get the version number for the dependent packages in r format..
-
+  # this relies on GitHub packages bumping a version whenever they are changed
+  # which does not always happen ...
   behind <- purrr::map2_lgl(github_version, local_version, `>`)
 
   tibble::tibble(
