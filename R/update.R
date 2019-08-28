@@ -217,3 +217,19 @@ get_versions <- function(github_user_repo) {
     use.names=FALSE
   )
 }
+
+# print status of natverse dependencies
+natverse_deps2 <- function(recursive = TRUE) {
+  pkgs=c('natverse', natverse_dep_pkgs(recursive = recursive))
+  pi=sessioninfo::package_info(pkgs, dependencies = FALSE)
+  pi
+}
+
+# update natverse dependencies
+natverse_update2 <- function(update=FALSE, recursive = TRUE, dependencies = NA, ...) {
+  pkgs=c('natverse', natverse_dep_pkgs(recursive = recursive))
+  if(interactive())
+    message("Checking for remote updates for ", length(pkgs), " packages ...")
+  if(update)
+    remotes::update_packages(pkgs, ...)
+}
