@@ -22,6 +22,13 @@ natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
     deps <- if(is.null(deps)) depsg else rbind(deps, depsg)
   }
 
+  # check for any missing packages that are not installed at all
+  pi=sessioninfo::package_info('natverse', dependencies = T)
+  pi_missing=filter(pi, is.na(source))
+  if(nrow(pi_missing)) {
+    deps=dplyr::bind_rows(deps, pi_missing[c("package", "source")])
+  }
+
   behind_temp <- dplyr::filter(deps, deps$behind)
   deps$status <- paste0(crayon::green(cli::symbol$tick))
   deps[deps$behind & !is.na(deps$behind), "status"] <- paste0(crayon::red(cli::symbol$cross))
@@ -30,17 +37,32 @@ natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
   deps$behind <- NULL
 
   if (nrow(behind_temp) == 0) {
-    cli::cat_line(paste("\nAll natverse dependencies from",
-                        paste(source, collapse=" "),
-                        "are up-to-date, see details below:"))
+    cli::cat_line(crayon::green(
+      paste(
+        "\nAll natverse dependencies from",
+        paste(source, collapse = " "),
+        "are up-to-date, see details below:"
+      )
+    ))
     cli::cat_line()
     cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
     return(invisible(deps))
   }
 
-  cli::cat_line(paste("\nThe following natverse dependencies from",
-                      paste(source, collapse=" "),
-                      "are out-of-date, see details below:"))
+  if(nrow(pi_missing)) {
+    cli::cat_line(crayon::red(
+      "\nThe following natverse dependencies are missing!\n"))
+    cli::cat_line("  ", paste(pi_missing$package, collapse = ', '))
+    cli::cat_line("\nWe recommend installing them by running:")
+    cli::cat_line('remotes::update_packages("natverse")')
+  }
+  cli::cat_line(crayon::red(
+    paste(
+      "\nThe following natverse dependencies from",
+      paste(source, collapse = " "),
+      "are out-of-date, see details below:"
+    )
+  ))
   cli::cat_line()
   cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
   cli::cat_line()
@@ -242,8 +264,6 @@ get_versions <- function(github_user_repo) {
 
 # print status of natverse dependencies
 natverse_deps2 <- function(recursive = TRUE) {
-  if(!requireNamespace("sessioninfo", quietly = TRUE))
-    stop("Please install suggested package: sessioninfo")
   pkgs=c('natverse', natverse_dep_pkgs(recursive = recursive))
   pi=sessioninfo::package_info(pkgs, dependencies = FALSE)
   pi
