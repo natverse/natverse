@@ -92,11 +92,11 @@ natverse_deps <- function(recursive = FALSE) {
   #construct a dataframe with the details to pass on..
   tibble::tibble(
     package = pkg_deps,
-    cran = cran_version %>% purrr::map_chr(as.character),
+    remote = cran_version %>% purrr::map_chr(as.character),
     local = local_version %>% purrr::map_chr(as.character),
+    source = pkgs_local_df$source[match(pkg_deps, pkgs_local_df$package)],
     behind = behind
   )
-
 }
 
 # internal function to return names of natverse dependencies
@@ -169,7 +169,7 @@ natverse_githubdeps <- function(recursive = FALSE) {
 
   tibble::tibble(
     package = pkgs_local_df$package,
-    github = github_version %>% purrr::map_chr(as.character),
+    remote = github_version %>% purrr::map_chr(as.character),
     local = local_version %>% purrr::map_chr(as.character),
     source = pkgs_local_df$source,
     behind = behind
