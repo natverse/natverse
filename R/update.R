@@ -1,25 +1,25 @@
-#' Update natverse packages
+#' Check status of natverse packages and (optionally) update if necessary
 #'
-#' This will check to see if all natverse packages (and optionally (if recursive
-#' = TRUE), their dependencies ) are up-to-date, and will provide the command to
-#' perform the installation in one go! Adapted and modified from the following
-#' sources : update function in 'tidyverse' package, github_update function in
-#' 'dtupdate' package
+#' This will check to see if all natverse packages (and optionally (if
+#' \code{recursive = TRUE}), their dependencies ) are up-to-date, and will
+#' provide the command to perform the installation in one go! Adapted and
+#' modified from the following sources : \code{update} function in 'tidyverse'
+#' package, \code{github_update} function in 'dtupdate' package
 #'
 #' @param recursive If \code{TRUE}, will also check all dependencies of natverse
 #'   packages.
 #' @param source set the source of updates to 'CRAN' or 'GITHUB' natverse
-#'   packages.
+#'   packages. The default checks both.
 #' @return A \code{tibble} detailing dependencies and their status.
 #' @export
 #' @examples
 #' natverse_update()
 natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
-  source=match.arg(source)
-  if (source == 'CRAN') {
-    deps <- natverse_deps(recursive)
-  } else if (source == 'GITHUB') {
-    deps <- natverse_githubdeps(recursive)
+  source=match.arg(source, several.ok = T)
+  deps <- if ('CRAN' %in% source) natverse_deps(recursive) else NULL
+  if ('GITHUB' %in% source) {
+    depsg <- natverse_githubdeps(recursive)
+    deps <- if(is.null(deps)) depsg else rbind(deps, depsg)
   }
 
   behind_temp <- dplyr::filter(deps, deps$behind)
@@ -30,22 +30,29 @@ natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
   deps$behind <- NULL
 
   if (nrow(behind_temp) == 0) {
-    cli::cat_line(paste("\nAll natverse dependencies from", source, "are up-to-date, see details below:"))
+    cli::cat_line(paste("\nAll natverse dependencies from",
+                        paste(source, collapse=" "),
+                        "are up-to-date, see details below:"))
     cli::cat_line()
     cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
     return(invisible(deps))
   }
 
-  cli::cat_line(paste("\nThe following natverse dependencies from", source, "are out-of-date, see details below:"))
+  cli::cat_line(paste("\nThe following natverse dependencies from",
+                      paste(source, collapse=" "),
+                      "are out-of-date, see details below:"))
   cli::cat_line()
   cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
   cli::cat_line()
   cli::cat_line("Start a clean R session then run:")
 
-  if(source == 'CRAN'){
+  behind_cran <- dplyr::filter(behind_temp, grepl("CRAN", source))
+  behind_github <- dplyr::filter(behind_temp, grepl("github", source, ignore.case = T))
+  if(nrow(behind_cran) > 0){
     pkg_str <- paste0(deparse(behind_temp$package), collapse = "\n")
     cli::cat_line("install.packages(", pkg_str, ")")
-  } else if(source == 'GITHUB') {
+  }
+  if(nrow(behind_github) > 0) {
     just_repo <- apply(behind_temp, 1, function(x) {stringr::str_match(x["source"],
                                                          "\\(([[:alnum:]-_\\.]*/[[:alnum:]-_\\.]*)[@[:alnum:]]*")[,2]})
     pkg_str <- paste0(deparse(just_repo), collapse = "\n")
