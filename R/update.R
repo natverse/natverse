@@ -77,11 +77,17 @@ natverse_deps <- function(recursive = FALSE) {
   github_pkgs=pkgs_local_df[grepl('Github', pkgs_local_df$source), 'package']
   pkg_deps <- setdiff(pkg_deps, github_pkgs) #just ignore the github packages..
 
-  pkgs <- installed.packages()
-  cran_version <- lapply(pkgs[pkg_deps, "Version"], base::package_version) #get the version number for the dependent packages in r format..
-  local_version <- lapply(pkg_deps, utils::packageVersion) #get the version number for the dependent packages in r format..
-
-  behind <- purrr::map2_lgl(cran_version, local_version, `>`) #check if the local version is lower and store it in behind flag..
+  pkgs <- utils::available.packages()
+  # get the version number on CRAN for the dependent packages in r format
+  cran_version <- lapply(pkg_deps, function(p) {
+    v=try(pkgs[p, "Version"], silent = T)
+    if(inherits(v, "try-error")) v=NA
+    numeric_version(v, strict = FALSE)
+  })
+  #get the version number for the dependent packages in r format
+  local_version <- lapply(pkg_deps, utils::packageVersion)
+  #check if the local version is lower and store it in behind flag
+  behind <- purrr::map2_lgl(cran_version, local_version, `>`)
 
   #construct a dataframe with the details to pass on..
   tibble::tibble(
