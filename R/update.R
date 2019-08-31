@@ -235,6 +235,8 @@ get_versions <- function(github_user_repo) {
 
 # print status of natverse dependencies
 natverse_deps2 <- function(recursive = TRUE) {
+  if(!requireNamespace("sessioninfo", quietly = TRUE))
+    stop("Please install suggested package: sessioninfo")
   pkgs=c('natverse', natverse_dep_pkgs(recursive = recursive))
   pi=sessioninfo::package_info(pkgs, dependencies = FALSE)
   pi
