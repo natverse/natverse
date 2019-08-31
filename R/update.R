@@ -16,6 +16,16 @@
 #' natverse_update()
 natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
   source=match.arg(source, several.ok = T)
+
+  #set the location of the repository or else you get complaints from knitr and examples
+  r = getOption("repos")
+  if(isTRUE(is.na(r["CRAN"])) || "@CRAN@" %in% r) {
+    # CRAN option completely unset or has signalling value
+    r["CRAN"] = "https://cloud.r-project.org/"
+    op <- options(repos = r)
+    on.exit(options(op))
+  }
+
   deps <- if ('CRAN' %in% source) natverse_deps(recursive) else NULL
   if ('GITHUB' %in% source) {
     depsg <- natverse_githubdeps(recursive)
@@ -24,7 +34,7 @@ natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
 
   # check for any missing packages that are not installed at all
   pi=sessioninfo::package_info('natverse', dependencies = T)
-  pi_missing=filter(pi, is.na(source))
+  pi_missing=dplyr::filter(pi, is.na(source))
   if(nrow(pi_missing)) {
     deps=dplyr::bind_rows(deps, pi_missing[c("package", "source")])
   }
@@ -89,15 +99,6 @@ natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
 #This function grabs the dependencies of the natverse package which have been installed via CRAN
 
 natverse_deps <- function(recursive = FALSE) {
-
-  #set the location of the repository or else you get complaints from knitr and examples
-  r = getOption("repos")
-  if(isTRUE(is.na(r["CRAN"])) || "@CRAN@" %in% r) {
-    # CRAN option completely unset or has signalling value
-    r["CRAN"] = "https://cloud.r-project.org/"
-    op <- options(repos = r)
-    on.exit(options(op))
-  }
 
   pkg_deps <- natverse_dep_pkgs(recursive = recursive)
 
