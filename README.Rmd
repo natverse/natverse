@@ -63,14 +63,8 @@ natverse_conflicts()
 
 You can check if all the packages within `natverse` are up to date with:
 
-1.For dependencies installed via CRAN use
-
-```{r updates_CRAN}
-natverse_update(source = 'CRAN')
+```{r updates_both}
+natverse_update()
 ```
 
-2.For dependencies installed via GitHub use
-```{r updates_GitHub}
-natverse_update(source = 'GITHUB')
-```
-
+This also prints instructions for how to update those dependencies.
