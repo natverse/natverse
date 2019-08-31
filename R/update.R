@@ -70,35 +70,24 @@ natverse_deps <- function(recursive = FALSE) {
     on.exit(options(op))
   }
 
-  pkgs <- utils::available.packages() #list all the packages available in CRAN repositories with row names as pkgnames..
-
-  pkgs_local <- utils::installed.packages() #list all installed packages only, as you will only update packages after installing them?, will be changed once natverse
-                                       #is on CRAN (may be someone updated dependencies alone)..
-
-  deps <- tools::package_dependencies("natverse", pkgs_local, recursive = FALSE) # check only the dependencies of natverse(which is currently local only)
-
-
-  pkg_deps <- unique(sort(unlist(deps))) #just flatten the list
-
-  # we don't want to update base packages, so ignore them, this needs to be checked with Greg..
-  base_pkgs <- c(
-    "base", "compiler", "datasets", "graphics", "grDevices", "grid",
-    "methods", "parallel", "splines", "stats", "stats4", "tools", "tcltk",
-    "utils"
-  )
-  pkg_deps <- setdiff(pkg_deps, base_pkgs) #just ignore the base packages..
+  pkg_deps <- natverse_dep_pkgs(recursive = recursive)
 
   #we also don't want to update the github packages here, so ignore them as well..
   pkgs_local_df <- local_package_info()
   github_pkgs=pkgs_local_df[grepl('Github', pkgs_local_df$source), 'package']
   pkg_deps <- setdiff(pkg_deps, github_pkgs) #just ignore the github packages..
 
-  pkg_deps <- intersect(pkg_deps,pkgs[,"Package"]) #added for testing examples from devtools::check()
-
-  cran_version <- lapply(pkgs[pkg_deps, "Version"], base::package_version) #get the version number for the dependent packages in r format..
-  local_version <- lapply(pkg_deps, utils::packageVersion) #get the version number for the dependent packages in r format..
-
-  behind <- purrr::map2_lgl(cran_version, local_version, `>`) #check if the local version is lower and store it in behind flag..
+  pkgs <- utils::available.packages()
+  # get the version number on CRAN for the dependent packages in r format
+  cran_version <- lapply(pkg_deps, function(p) {
+    v=try(pkgs[p, "Version"], silent = T)
+    if(inherits(v, "try-error")) v=NA
+    numeric_version(v, strict = FALSE)
+  })
+  #get the version number for the dependent packages in r format
+  local_version <- lapply(pkg_deps, utils::packageVersion)
+  #check if the local version is lower and store it in behind flag
+  behind <- purrr::map2_lgl(cran_version, local_version, `>`)
 
   #construct a dataframe with the details to pass on..
   tibble::tibble(
@@ -110,9 +99,24 @@ natverse_deps <- function(recursive = FALSE) {
 
 }
 
+# internal function to return names of natverse dependencies
+natverse_dep_pkgs <- function(recursive = FALSE, include.base=FALSE) {
+  pkgs_local <- utils::installed.packages() #list all installed packages only, as you will only update packages after installing them?, will be changed once natverse
+  #is on CRAN (may be someone updated dependencies alone)..
 
+  deps <- tools::package_dependencies("natverse", pkgs_local, recursive = recursive) # check only the dependencies of natverse(which is currently local only)
 
-local_package_info <- function(lib.loc=.libPaths()[1]) {
+  pkg_deps <- unique(sort(unlist(deps))) #just flatten the list
+
+  # don't include base by default because they come with each version of R not from CRAN
+  if(isFALSE(include.base)){
+    base_pkgs <- pkgs_local[pkgs_local[,'Priority']=='base' &!is.na(pkgs_local[,'Priority']),'Package']
+    pkg_deps <- setdiff(pkg_deps, base_pkgs)
+  }
+  pkg_deps
+}
+
+local_package_info <- function(pkgs=NULL, lib.loc=.libPaths()[1]) {
   ip=utils::installed.packages(lib.loc = lib.loc)
 
   pkgs_local <- sort(ip[,"Package"])
@@ -125,6 +129,15 @@ local_package_info <- function(lib.loc=.libPaths()[1]) {
   pkgs_local_df <- data.frame(package=pkgs_local, version=version_local, date=date_local, source=source_local,
                               stringsAsFactors=FALSE, check.names=FALSE)
 
+  if(!is.null(pkgs)) {
+    missing=setdiff(pkgs, pkgs_local_df$package)
+    if(length(missing))
+      message("Unable to find installed package information about:\n",
+              paste(missing, collapse=", "))
+    rownames(pkgs_local_df)=pkgs_local_df$package
+    pkgs_local_df=pkgs_local_df[intersect(pkgs_local_df$package, pkgs), , drop=F]
+  }
+
   rownames(pkgs_local_df) <- NULL
   # harmless, but I don't think this is used anywhere
   class(pkgs_local_df) <- c("githubupdate", "data.frame")
@@ -132,14 +145,12 @@ local_package_info <- function(lib.loc=.libPaths()[1]) {
 }
 
 natverse_githubdeps <- function(recursive = FALSE) {
-
-  pkgs_local_df <- local_package_info()
-  # get pkg info
+  deps=natverse_dep_pkgs(recursive = recursive)
+  pkgs_local_df <- local_package_info(deps)
 
   if (any(grepl("Github", pkgs_local_df$source))) {
 
     pkgs_local_df <- dplyr::filter(pkgs_local_df, grepl("Github", source))
-
 
     just_repo <- stringr::str_match(pkgs_local_df$source,
                                     "\\(([[:alnum:]-_\\.]*/[[:alnum:]-_\\.]*)[@[:alnum:]]*")[,2]
@@ -152,10 +163,11 @@ natverse_githubdeps <- function(recursive = FALSE) {
 
   github_version <- lapply(pkgs_local_df$gh_version, base::package_version, strict = F) #get the version number for the dependent packages in r format..
   local_version <- lapply(pkgs_local_df$version, base::package_version, strict = F) #get the version number for the dependent packages in r format..
-
+  # this relies on GitHub packages bumping a version whenever they are changed
+  # which does not always happen ...
   behind <- purrr::map2_lgl(github_version, local_version, `>`)
 
-    tibble::tibble(
+  tibble::tibble(
     package = pkgs_local_df$package,
     github = github_version %>% purrr::map_chr(as.character),
     local = local_version %>% purrr::map_chr(as.character),
@@ -219,4 +231,22 @@ get_versions <- function(github_user_repo) {
     pbapply::pbsapply(gh_urls, .get_version, USE.NAMES = FALSE),
     use.names=FALSE
   )
+}
+
+# print status of natverse dependencies
+natverse_deps2 <- function(recursive = TRUE) {
+  if(!requireNamespace("sessioninfo", quietly = TRUE))
+    stop("Please install suggested package: sessioninfo")
+  pkgs=c('natverse', natverse_dep_pkgs(recursive = recursive))
+  pi=sessioninfo::package_info(pkgs, dependencies = FALSE)
+  pi
+}
+
+# update natverse dependencies
+natverse_update2 <- function(update=FALSE, recursive = TRUE, dependencies = NA, ...) {
+  pkgs=c('natverse', natverse_dep_pkgs(recursive = recursive))
+  if(interactive())
+    message("Checking for remote updates for ", length(pkgs), " packages ...")
+  if(update)
+    remotes::update_packages(pkgs, ...)
 }
