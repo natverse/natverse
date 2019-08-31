@@ -104,9 +104,8 @@ natverse_dep_pkgs <- function(recursive = FALSE, include.base=FALSE) {
 
   # don't include base by default because they come with each version of R not from CRAN
   if(isFALSE(include.base)){
-    pkgs <- utils::available.packages() #list all the packages available in CRAN repositories with row names as pkgnames..
-    base_pkgs <- pkgs[pkgs[,'Priority']=='recommended' &!is.na(pkgs[,'Priority']),'Package']
-    pkg_deps <- setdiff(pkg_deps, base_pkgs) #just ignore the base packages..
+    base_pkgs <- pkgs_local[pkgs_local[,'Priority']=='base' &!is.na(pkgs_local[,'Priority']),'Package']
+    pkg_deps <- setdiff(pkg_deps, base_pkgs)
   }
   pkg_deps
 }
