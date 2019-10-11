@@ -3,7 +3,6 @@
 S3method(print,natverse_conflicts)
 export(dependency_plot)
 export(dependency_visualization)
-export(natlogo_generation)
 export(natverse_conflicts)
 export(natverse_update)
 import(elmr)
