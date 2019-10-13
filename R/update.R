@@ -71,6 +71,8 @@ natverse_deps <- function(dependencies = TRUE) {
     }
     cli::cat_line(crayon::red(
       paste("\nThe following natverse dependencies are out-of-date, see details below:")))
+    cli::cat_line("\nWe recommend updating them by running:")
+    cli::cat_line('natverse_update(update=TRUE)')
     pckglist = c(pckglist,behind_temp$package)
 
   }

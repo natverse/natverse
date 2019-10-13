@@ -66,5 +66,3 @@ You can check if all the packages within `natverse` are up to date with:
 ```{r updates_both}
 natverse_update()
 ```
-
-This also prints instructions for how to update those dependencies.
