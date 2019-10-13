@@ -48,7 +48,6 @@ Suggests:
     fishatlas,
     ggplot2,
     here,
-    hexSticker,
     insectbrainr,
     knitr,
     png,
