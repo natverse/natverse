@@ -4,24 +4,24 @@
 \alias{natverse_update}
 \title{Check status of natverse packages and (optionally) update if necessary}
 \usage{
-natverse_update(recursive = FALSE, source = c("CRAN", "GITHUB"))
+natverse_update(update = FALSE, recursive = TRUE, dependencies = NA,
+  ...)
 }
 \arguments{
-\item{recursive}{If \code{TRUE}, will also check all dependencies of natverse
-packages.}
+\item{update}{If \code{TRUE}, will actually update the packages}
 
-\item{source}{set the source of updates to 'CRAN' or 'GITHUB' natverse
-packages. The default checks both.}
-}
-\value{
-A \code{tibble} detailing dependencies and their status.
+\item{recursive}{If \code{TRUE}, will also check all dependencies of natverse packages.}
+
+\item{dependencies}{this parameter is passed onto function \code{\link[remotes]{update_packages}},
+indicating which dependencies
+to update here NA stands for "Depends", "Imports" and "LinkingTo" .}
+
+\item{...}{extra arguments to pass to \code{\link[remotes]{update_packages}}.}
 }
 \description{
 This will check to see if all natverse packages (and optionally (if
 \code{recursive = TRUE}), their dependencies ) are up-to-date, and will
-provide the command to perform the installation in one go! Adapted and
-modified from the following sources : \code{update} function in 'tidyverse'
-package, \code{github_update} function in 'dtupdate' package
+update them (optionally (if \code{update = TRUE})) if they are missing or are not up-to-date!
 }
 \examples{
 natverse_update()

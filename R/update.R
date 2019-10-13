@@ -1,270 +1,12 @@
-#' Check status of natverse packages and (optionally) update if necessary
-#'
+# print status of natverse dependencies
 #' This will check to see if all natverse packages (and optionally (if
-#' \code{recursive = TRUE}), their dependencies ) are up-to-date, and will
-#' provide the command to perform the installation in one go! Adapted and
-#' modified from the following sources : \code{update} function in 'tidyverse'
-#' package, \code{github_update} function in 'dtupdate' package
-#'
-#' @param recursive If \code{TRUE}, will also check all dependencies of natverse
-#'   packages.
-#' @param source set the source of updates to 'CRAN' or 'GITHUB' natverse
-#'   packages. The default checks both.
-#' @return A \code{tibble} detailing dependencies and their status.
+#' \code{dependencies = TRUE}), their dependencies )
+#' @param dependencies If \code{TRUE}, will also check all dependencies of natverse packages.
+#' @return A character vector containing packages that are either missing or are not up-to-date.
 #' @export
 #' @examples
-#' natverse_update()
-natverse_update <- function(recursive = FALSE, source = c('CRAN', 'GITHUB')) {
-  source=match.arg(source, several.ok = T)
-
-  #set the location of the repository or else you get complaints from knitr and examples
-  r = getOption("repos")
-  if(isTRUE(is.na(r["CRAN"])) || "@CRAN@" %in% r) {
-    # CRAN option completely unset or has signalling value
-    r["CRAN"] = "https://cloud.r-project.org/"
-    op <- options(repos = r)
-    on.exit(options(op))
-  }
-
-  deps <- if ('CRAN' %in% source) natverse_deps(recursive) else NULL
-  if ('GITHUB' %in% source) {
-    depsg <- natverse_githubdeps(recursive)
-    deps <- if(is.null(deps)) depsg else rbind(deps, depsg)
-  }
-
-  # check for any missing packages that are not installed at all
-  pi=sessioninfo::package_info('natverse', dependencies = T)
-  pi_missing=dplyr::filter(pi, is.na(source))
-  if(nrow(pi_missing)) {
-    deps=dplyr::bind_rows(deps, pi_missing[c("package", "source")])
-  }
-
-  behind_temp <- dplyr::filter(deps, deps$behind)
-  deps$status <- paste0(crayon::green(cli::symbol$tick))
-  deps[deps$behind & !is.na(deps$behind), "status"] <- paste0(crayon::red(cli::symbol$cross))
-  # NB fancy question marks always seem to be red
-  deps[is.na(deps$behind), "status"] <- cli::symbol$fancy_question_mark
-  deps$behind <- NULL
-
-  if (nrow(behind_temp) == 0) {
-    cli::cat_line(crayon::green(
-      paste(
-        "\nAll natverse dependencies from",
-        paste(source, collapse = " "),
-        "are up-to-date, see details below:"
-      )
-    ))
-    cli::cat_line()
-    cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
-    return(invisible(deps))
-  }
-
-  if(nrow(pi_missing)) {
-    cli::cat_line(crayon::red(
-      "\nThe following natverse dependencies are missing!\n"))
-    cli::cat_line("  ", paste(pi_missing$package, collapse = ', '))
-    cli::cat_line("\nWe recommend installing them by running:")
-    cli::cat_line('remotes::update_packages("natverse")')
-  }
-  cli::cat_line(crayon::red(
-    paste(
-      "\nThe following natverse dependencies from",
-      paste(source, collapse = " "),
-      "are out-of-date, see details below:"
-    )
-  ))
-  cli::cat_line()
-  cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
-  cli::cat_line()
-  cli::cat_line("Start a clean R session then run:")
-
-  behind_cran <- dplyr::filter(behind_temp, grepl("CRAN", source))
-  behind_github <- dplyr::filter(behind_temp, grepl("github", source, ignore.case = T))
-  if(nrow(behind_cran) > 0){
-    pkg_str <- paste0(deparse(behind_temp$package), collapse = "\n")
-    cli::cat_line("install.packages(", pkg_str, ")")
-  }
-  if(nrow(behind_github) > 0) {
-    just_repo <- apply(behind_temp, 1, function(x) {stringr::str_match(x["source"],
-                                                         "\\(([[:alnum:]-_\\.]*/[[:alnum:]-_\\.]*)[@[:alnum:]]*")[,2]})
-    pkg_str <- paste0(deparse(just_repo), collapse = "\n")
-    cli::cat_line("devtools::install_github(", pkg_str, ")")
-  }
-  invisible(deps)
-}
-
-##subfunctions..
-
-
-#This function grabs the dependencies of the natverse package which have been installed via CRAN
-
-natverse_deps <- function(recursive = FALSE) {
-
-  pkg_deps <- natverse_dep_pkgs(recursive = recursive)
-
-  #we also don't want to update the github packages here, so ignore them as well..
-  pkgs_local_df <- local_package_info()
-  github_pkgs=pkgs_local_df[grepl('Github', pkgs_local_df$source), 'package']
-  pkg_deps <- setdiff(pkg_deps, github_pkgs) #just ignore the github packages..
-
-  pkgs <- utils::available.packages()
-  # get the version number on CRAN for the dependent packages in r format
-  cran_version <- lapply(pkg_deps, function(p) {
-    v=try(pkgs[p, "Version"], silent = T)
-    if(inherits(v, "try-error")) v=NA
-    numeric_version(v, strict = FALSE)
-  })
-  #get the version number for the dependent packages in r format
-  local_version <- lapply(pkg_deps, utils::packageVersion)
-  #check if the local version is lower and store it in behind flag
-  behind <- purrr::map2_lgl(cran_version, local_version, `>`)
-
-  #construct a dataframe with the details to pass on..
-  tibble::tibble(
-    package = pkg_deps,
-    remote = cran_version %>% purrr::map_chr(as.character),
-    local = local_version %>% purrr::map_chr(as.character),
-    source = pkgs_local_df$source[match(pkg_deps, pkgs_local_df$package)],
-    behind = behind
-  )
-}
-
-# internal function to return names of natverse dependencies
-natverse_dep_pkgs <- function(recursive = FALSE, include.base=FALSE) {
-  pkgs_local <- utils::installed.packages() #list all installed packages only, as you will only update packages after installing them?, will be changed once natverse
-  #is on CRAN (may be someone updated dependencies alone)..
-
-  deps <- tools::package_dependencies("natverse", pkgs_local, recursive = recursive) # check only the dependencies of natverse(which is currently local only)
-
-  pkg_deps <- unique(sort(unlist(deps))) #just flatten the list
-
-  # don't include base by default because they come with each version of R not from CRAN
-  if(isFALSE(include.base)){
-    base_pkgs <- pkgs_local[pkgs_local[,'Priority']=='base' &!is.na(pkgs_local[,'Priority']),'Package']
-    pkg_deps <- setdiff(pkg_deps, base_pkgs)
-  }
-  pkg_deps
-}
-
-local_package_info <- function(pkgs=NULL, lib.loc=.libPaths()[1]) {
-  ip=utils::installed.packages(lib.loc = lib.loc)
-
-  pkgs_local <- sort(ip[,"Package"])
-
-  desc_local <- lapply(pkgs_local, utils::packageDescription, lib.loc=lib.loc)
-  version_local <- vapply(desc_local, function(x) x$Version, character(1))
-  date_local <- vapply(desc_local, pkg_date, character(1))
-  source_local <- vapply(desc_local, pkg_source, character(1))
-
-  pkgs_local_df <- data.frame(package=pkgs_local, version=version_local, date=date_local, source=source_local,
-                              stringsAsFactors=FALSE, check.names=FALSE)
-
-  if(!is.null(pkgs)) {
-    missing=setdiff(pkgs, pkgs_local_df$package)
-    if(length(missing))
-      message("Unable to find installed package information about:\n",
-              paste(missing, collapse=", "))
-    rownames(pkgs_local_df)=pkgs_local_df$package
-    pkgs_local_df=pkgs_local_df[intersect(pkgs_local_df$package, pkgs), , drop=F]
-  }
-
-  rownames(pkgs_local_df) <- NULL
-  # harmless, but I don't think this is used anywhere
-  class(pkgs_local_df) <- c("githubupdate", "data.frame")
-  pkgs_local_df
-}
-
-natverse_githubdeps <- function(recursive = FALSE) {
-  deps=natverse_dep_pkgs(recursive = recursive)
-  pkgs_local_df <- local_package_info(deps)
-
-  if (any(grepl("Github", pkgs_local_df$source))) {
-
-    pkgs_local_df <- dplyr::filter(pkgs_local_df, grepl("Github", source))
-
-    just_repo <- stringr::str_match(pkgs_local_df$source,
-                                    "\\(([[:alnum:]-_\\.]*/[[:alnum:]-_\\.]*)[@[:alnum:]]*")[,2]
-    pkgs_local_df$gh_version <- get_versions(just_repo)
-    pkgs_local_df$`*` <- ifelse(mapply(utils::compareVersion, pkgs_local_df$version, pkgs_local_df$gh_version,
-                                       USE.NAMES=FALSE)<0, '*', '')
-    pkgs_local_df$`*` <- ifelse(is.na(pkgs_local_df$gh_version), '', pkgs_local_df$`*`)
-
-  }
-
-  github_version <- lapply(pkgs_local_df$gh_version, base::package_version, strict = F) #get the version number for the dependent packages in r format..
-  local_version <- lapply(pkgs_local_df$version, base::package_version, strict = F) #get the version number for the dependent packages in r format..
-  # this relies on GitHub packages bumping a version whenever they are changed
-  # which does not always happen ...
-  behind <- purrr::map2_lgl(github_version, local_version, `>`)
-
-  tibble::tibble(
-    package = pkgs_local_df$package,
-    remote = github_version %>% purrr::map_chr(as.character),
-    local = local_version %>% purrr::map_chr(as.character),
-    source = pkgs_local_df$source,
-    behind = behind
-  )
-
-}
-
-pkg_date <- function (desc)  {
-  if (!is.null(desc$`Date/Publication`)) {
-    date <- desc$`Date/Publication`
-  } else if (!is.null(desc$Built)) {
-    built <- strsplit(desc$Built, "; ")[[1]]
-    date <- built[3]
-  } else {
-    date <- NA_character_
-  }
-  as.character(as.Date(strptime(date, "%Y-%m-%d")))
-}
-
-pkg_source <- function (desc)  {
-  if (!is.null(desc$GithubSHA1)) {
-    str <- paste0("Github (", desc$GithubUsername, "/", desc$GithubRepo,
-                  "@", substr(desc$GithubSHA1, 1, 7), ")")
-  } else if (!is.null(desc$RemoteType)) {
-    str <- paste0(desc$RemoteType, " (", desc$RemoteUsername,
-                  "/", desc$RemoteRepo, "@", substr(desc$RemoteSha,
-                                                    1, 7), ")")
-  } else if (!is.null(desc$Repository)) {
-    repo <- desc$Repository
-    if (!is.null(desc$Built)) {
-      built <- strsplit(desc$Built, "; ")[[1]]
-      ver <- sub("$R ", "", built[1])
-      repo <- paste0(repo, " (", ver, ")")
-    }
-    repo
-  } else if (!is.null(desc$biocViews)) {
-    "Bioconductor"
-  } else {
-    "local"
-  }
-}
-
-
-.get_version <- function(x) {
-  url_con <- url(x)
-  on.exit(close(url_con))
-  version <- suppressWarnings(try(
-    as.character(read.dcf(url_con, fields="Version")), silent = TRUE
-    ))
-  if (inherits(version, "try-error")) NA else version
-}
-
-get_versions <- function(github_user_repo) {
-
-  base_url <- "https://raw.githubusercontent.com/%s/master/DESCRIPTION"
-  gh_urls <- sprintf(base_url, github_user_repo)
-
-  unlist(
-    pbapply::pbsapply(gh_urls, .get_version, USE.NAMES = FALSE),
-    use.names=FALSE
-  )
-}
-
-# print status of natverse dependencies
-natverse_deps2 <- function(dependencies = TRUE) {
+#' natverse_deps()
+natverse_deps <- function(dependencies = TRUE) {
 
   #Get details of the packages first..
   pkgstatus_df <- remotes::dev_package_deps(find.package("natverse"),dependencies = dependencies)
@@ -276,22 +18,37 @@ natverse_deps2 <- function(dependencies = TRUE) {
   deps$package  <- pkgstatus_df$package
   deps$remote <- pkgstatus_df$available
   deps$local <- pkgstatus_df$installed
-  deps$source <- remotes:::format.remotes(pkgstatus_df$remote)
+  deps$source <- format.remotes(pkgstatus_df$remote)
+
+  ## Status values from remotes package..
+  ## -2 = not installed, but available on CRAN
+  ## -1 = installed, but out of date
+  ##  0 = installed, most recent version
+  ##  1 = installed, version ahead of CRAN
+  ##  2 = package not on CRAN
+
   deps$behind <- TRUE
   deps$behind[pkgstatus_df$diff == 0L] <- FALSE
 
+  deps$missing <- FALSE
+  deps$missing[pkgstatus_df$diff == -2L] <- TRUE
+
   behind_temp <- dplyr::filter(deps, deps$behind)
+  missing_temp <- dplyr::filter(deps, deps$missing)
 
   #Perform some fancy formatting on them..
   deps$status <- paste0(crayon::green(cli::symbol$tick))
   deps[deps$behind & !is.na(deps$behind), "status"] <- paste0(crayon::red(cli::symbol$cross))
   # NB fancy question marks always seem to be red
-  deps[is.na(deps$behind), "status"] <- cli::symbol$fancy_question_mark
+  deps[deps$missing, "status"] <- cli::symbol$fancy_question_mark
   deps$behind <- NULL
+  deps$missing <- NULL
 
   #Just trunacate the SHA1 hash
-  deps$remote <- lapply(deps$remote, remotes:::format_str, width = 12)
-  deps$local <- lapply(deps$local, remotes:::format_str, width = 12)
+  deps$remote <- lapply(deps$remote, format_str, width = 12)
+  deps$local <- lapply(deps$local, format_str, width = 12)
+
+  pckglist = {}
 
   if (nrow(behind_temp) == 0) {
     cli::cat_line(crayon::green(
@@ -303,17 +60,66 @@ natverse_deps2 <- function(dependencies = TRUE) {
     ))
   } else{
 
+    if(nrow(missing_temp)) {
+      cli::cat_line(crayon::red(
+        "\nThe following natverse dependencies are missing!\n"))
+      cli::cat_line("  ", paste(missing_temp$package, collapse = ', '))
+      cli::cat_line("\nWe recommend installing them by running:")
+      cli::cat_line('natverse_update(update=TRUE)')
+
+      pckglist = c(pckglist,missing_temp$package)
+    }
+    cli::cat_line(crayon::red(
+      paste("\nThe following natverse dependencies are out-of-date, see details below:")))
+    pckglist = c(pckglist,behind_temp$package)
+
   }
     cli::cat_line()
     cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
+    cli::cat_line()
+
+    pckglist = unique(pckglist)
 
 }
 
-# update natverse dependencies
-natverse_update2 <- function(update=FALSE, recursive = TRUE, dependencies = NA, ...) {
-  pkgs=c('natverse', natverse_dep_pkgs(recursive = recursive))
+#' Check status of natverse packages and (optionally) update if necessary
+#'
+#' This will check to see if all natverse packages (and optionally (if
+#' \code{recursive = TRUE}), their dependencies ) are up-to-date, and will
+#' update them (optionally (if \code{update = TRUE})) if they are missing or are not up-to-date!
+#' @param update If \code{TRUE}, will actually update the packages
+#' @param recursive If \code{TRUE}, will also check all dependencies of natverse packages.
+#' @param dependencies this parameter is passed onto function \code{\link[remotes]{update_packages}},
+#' indicating which dependencies
+#' to update here NA stands for "Depends", "Imports" and "LinkingTo" .
+#' @param ... extra arguments to pass to \code{\link[remotes]{update_packages}}.
+#' @export
+#' @examples
+#' natverse_update()
+natverse_update <- function(update=FALSE, recursive = TRUE, dependencies = NA, ...) {
+  pkgs=c('natverse', natverse_deps(dependencies = recursive))
   if(interactive())
     message("Checking for remote updates for ", length(pkgs), " packages ...")
   if(update)
     remotes::update_packages(pkgs, ...)
+}
+
+
+# local functions taken directly from the package remotes
+
+format.remotes <- function(x, ...) {
+  vapply(x, format, character(1))
+}
+
+format_str <- function(x, width = Inf, trim = TRUE, justify = "none", ...) {
+  x <- format(x, trim = trim, justify = justify, ...)
+
+  if (width < Inf) {
+    x_width <- nchar(x, "width")
+    too_wide <- x_width > width
+    if (any(too_wide)) {
+      x[too_wide] <- paste0(substr(x[too_wide], 1, width - 3), "...")
+    }
+  }
+  x
 }
