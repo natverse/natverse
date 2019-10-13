@@ -56,11 +56,11 @@ Suggests:
     visNetwork (>= 0.2.1)
 Remotes: 
     datastorm-open/DependenciesGraphs,
-    jefferis/drvid,
+    natverse/drvid,
     jefferis/elmr,
     jefferis/fafbseg,
-    jefferis/nat,
-    jefferislab/neuprintr,
+    natverse/nat,
+    natverse/neuprintr,
     natverse/fishatlas,
     natverse/insectbrainr
 Encoding: UTF-8
