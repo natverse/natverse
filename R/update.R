@@ -52,9 +52,9 @@ natverse_deps <- function(dependencies = TRUE) {
 
   if (nrow(behind_temp) == 0) {
     cli::cat_line(crayon::green(
-      paste(
+      paste0(
         "\nAll natverse dependencies from",
-        paste(source, collapse = " "),
+        paste0(source, collapse = " "),
         "are up-to-date, see details below:"
       )
     ))
@@ -63,14 +63,14 @@ natverse_deps <- function(dependencies = TRUE) {
     if(nrow(missing_temp)) {
       cli::cat_line(crayon::red(
         "\nThe following natverse dependencies are missing!\n"))
-      cli::cat_line("  ", paste(missing_temp$package, collapse = ', '))
+      cli::cat_line("  ", paste0(missing_temp$package, collapse = ', '))
       cli::cat_line("\nWe recommend installing them by running:")
       cli::cat_line('natverse_update(update=TRUE)')
 
       pckglist = c(pckglist,missing_temp$package)
     }
     cli::cat_line(crayon::red(
-      paste("\nThe following natverse dependencies are out-of-date, see details below:")))
+      paste0("\nThe following natverse dependencies are out-of-date, see details below:")))
     cli::cat_line("\nWe recommend updating them by running:")
     cli::cat_line('natverse_update(update=TRUE)')
     pckglist = c(pckglist,behind_temp$package)
