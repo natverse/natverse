@@ -1,3 +1,4 @@
 test_that("natverse_update ", {
-  expect_is(natverse_deps(), 'character')
+  pckgs <- natverse_deps()
+  expect_is(pckgs, 'character')
 })
