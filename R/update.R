@@ -1,4 +1,4 @@
-# print status of natverse dependencies
+#' print status of natverse dependencies
 #' This will check to see if all natverse packages (and optionally (if
 #' \code{dependencies = TRUE}), their dependencies )
 #' @param dependencies If \code{TRUE}, will also check all dependencies of natverse packages.
@@ -53,9 +53,7 @@ natverse_deps <- function(dependencies = TRUE) {
   if (nrow(behind_temp) == 0) {
     cli::cat_line(crayon::green(
       paste0(
-        "\nAll natverse dependencies from",
-        paste0(source, collapse = " "),
-        "are up-to-date, see details below:"
+        "\nAll natverse dependencies are up-to-date, see details below:"
       )
     ))
   } else{
