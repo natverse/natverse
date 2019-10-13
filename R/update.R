@@ -264,10 +264,49 @@ get_versions <- function(github_user_repo) {
 }
 
 # print status of natverse dependencies
-natverse_deps2 <- function(recursive = TRUE) {
-  pkgs=c('natverse', natverse_dep_pkgs(recursive = recursive))
-  pi=sessioninfo::package_info(pkgs, dependencies = FALSE)
-  pi
+natverse_deps2 <- function(dependencies = TRUE) {
+
+  #Get details of the packages first..
+  pkgstatus_df <- remotes::dev_package_deps(find.package("natverse"),dependencies = dependencies)
+
+  #Now convert them to a readable format..
+  deps <- data.frame(package=character(nrow(pkgstatus_df)),remote=character(nrow(pkgstatus_df)),
+                     local=character(nrow(pkgstatus_df)),source=character(nrow(pkgstatus_df)),
+                     behind=logical(nrow(pkgstatus_df)),stringsAsFactors=FALSE)
+  deps$package  <- pkgstatus_df$package
+  deps$remote <- pkgstatus_df$available
+  deps$local <- pkgstatus_df$installed
+  deps$source <- remotes:::format.remotes(pkgstatus_df$remote)
+  deps$behind <- TRUE
+  deps$behind[pkgstatus_df$diff == 0L] <- FALSE
+
+  behind_temp <- dplyr::filter(deps, deps$behind)
+
+  #Perform some fancy formatting on them..
+  deps$status <- paste0(crayon::green(cli::symbol$tick))
+  deps[deps$behind & !is.na(deps$behind), "status"] <- paste0(crayon::red(cli::symbol$cross))
+  # NB fancy question marks always seem to be red
+  deps[is.na(deps$behind), "status"] <- cli::symbol$fancy_question_mark
+  deps$behind <- NULL
+
+  #Just trunacate the SHA1 hash
+  deps$remote <- lapply(deps$remote, remotes:::format_str, width = 12)
+  deps$local <- lapply(deps$local, remotes:::format_str, width = 12)
+
+  if (nrow(behind_temp) == 0) {
+    cli::cat_line(crayon::green(
+      paste(
+        "\nAll natverse dependencies from",
+        paste(source, collapse = " "),
+        "are up-to-date, see details below:"
+      )
+    ))
+  } else{
+
+  }
+    cli::cat_line()
+    cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
+
 }
 
 # update natverse dependencies
