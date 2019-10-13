@@ -5,7 +5,9 @@
 #' @return A character vector containing packages that are either missing or are not up-to-date.
 #' @export
 #' @examples
+#' \dontrun{
 #' natverse_deps()
+#' }
 natverse_deps <- function(dependencies = TRUE) {
 
   #Get details of the packages first..
@@ -95,7 +97,9 @@ natverse_deps <- function(dependencies = TRUE) {
 #' @param ... extra arguments to pass to \code{\link[remotes]{update_packages}}.
 #' @export
 #' @examples
+#' \dontrun{
 #' natverse_update()
+#' }
 natverse_update <- function(update=FALSE, recursive = TRUE, dependencies = NA, ...) {
   pkgs=c('natverse', natverse_deps(dependencies = recursive))
   if(interactive())
