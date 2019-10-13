@@ -20,5 +20,7 @@ This will check to see if all natverse packages (and optionally (if
 \code{dependencies = TRUE}), their dependencies )
 }
 \examples{
+\dontrun{
 natverse_deps()
+}
 }

@@ -20,6 +20,7 @@ Plot network for dependenciesGraphs object. Using visNetwork package. Adapted fr
 \code{plot} in 'DependenciesGraphs'
 }
 \examples{
+\dontrun{
 if (!require(DependenciesGraphs)) install.packages("DependenciesGraphs")
 if (!require(visNetwork)) install.packages("visNetwork")
 dep <- dependency_visualization('natverse', level = 'level_1')
@@ -27,5 +28,5 @@ dependency_plot(dep)
 
 # size
 dependency_plot(dep, height = "800px", width = "100\%")
-
+}
 }

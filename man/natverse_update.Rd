@@ -24,5 +24,7 @@ This will check to see if all natverse packages (and optionally (if
 update them (optionally (if \code{update = TRUE})) if they are missing or are not up-to-date!
 }
 \examples{
+\dontrun{
 natverse_update()
+}
 }

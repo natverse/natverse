@@ -50,7 +50,7 @@ natverse_deps <- function(dependencies = TRUE) {
   deps$remote <- lapply(deps$remote, format_str, width = 12)
   deps$local <- lapply(deps$local, format_str, width = 12)
 
-  pckglist = {}
+  pckglist = character(length = 0)
 
   if (nrow(behind_temp) == 0) {
     cli::cat_line(crayon::green(
