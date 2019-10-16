@@ -4,12 +4,12 @@
 \alias{natverse_deps}
 \title{print status of natverse dependencies
 This will check to see if all natverse packages (and optionally (if
-\code{dependencies = TRUE}), their dependencies )}
+\code{recursive = TRUE}), their dependencies )}
 \usage{
-natverse_deps(dependencies = TRUE)
+natverse_deps(recursive = TRUE)
 }
 \arguments{
-\item{dependencies}{If \code{TRUE}, will also check all dependencies of natverse packages.}
+\item{recursive}{If \code{TRUE}, will also check all dependencies of natverse packages.}
 }
 \value{
 A character vector containing packages that are either missing or are not up-to-date.
@@ -17,7 +17,7 @@ A character vector containing packages that are either missing or are not up-to-
 \description{
 print status of natverse dependencies
 This will check to see if all natverse packages (and optionally (if
-\code{dependencies = TRUE}), their dependencies )
+\code{recursive = TRUE}), their dependencies )
 }
 \examples{
 \dontrun{

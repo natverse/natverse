@@ -4,17 +4,15 @@
 \alias{natverse_update}
 \title{Check status of natverse packages and (optionally) update if necessary}
 \usage{
-natverse_update(update = FALSE, recursive = TRUE, dependencies = NA,
-  ...)
+natverse_update(update = FALSE, install_missing = FALSE,
+  recursive = TRUE, ...)
 }
 \arguments{
 \item{update}{If \code{TRUE}, will actually update the packages}
 
-\item{recursive}{If \code{TRUE}, will also check all dependencies of natverse packages.}
+\item{install_missing}{If \code{TRUE}, will install the missing packages}
 
-\item{dependencies}{this parameter is passed onto function \code{\link[remotes]{update_packages}},
-indicating which dependencies
-to update here NA stands for "Depends", "Imports" and "LinkingTo" .}
+\item{recursive}{If \code{TRUE}, will also check all dependencies of natverse packages.}
 
 \item{...}{extra arguments to pass to \code{\link[remotes]{update_packages}}.}
 }

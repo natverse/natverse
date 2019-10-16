@@ -25,20 +25,20 @@ if(!requireNamespace('remotes')) install.packages('remotes')
 remotes::install_github("natverse/natverse")
 ```
 
-Once installed, you can update natverse and all its dependencies like
-so:
+Once installed, you can update the elements of the natverse package and
+its dependecies like:
 
 ``` r
-remotes::update_packages('natverse')
+natverse_update(update = TRUE, install_missing = TRUE,dep = TRUE)
 ```
 
 This will ask you to confirm whether you want to update dependencies
 (and their dependencies).
 
-If want to upgrade all dependencies without answering any questions:
+If want to upgrade the natverse package itself:
 
 ``` r
-remotes::update_packages('natverse', upgrade='always')
+remotes::update_packages('natverse')
 ```
 
 ## Example
@@ -50,8 +50,8 @@ library(natverse)
 #> Loading required package: elmr
 #> Loading required package: nat.flybrains
 #> Loading required package: nat.templatebrains
-#> Loading required package: rgl
 #> Loading required package: nat
+#> Loading required package: rgl
 #> Registered S3 method overwritten by 'nat':
 #>   method             from
 #>   as.mesh3d.ashape3d rgl
@@ -71,7 +71,7 @@ running:
 
 ``` r
 natverse_conflicts()
-#> ── Conflicts ────────────────────────────────────────────────────────────── natverse_conflicts() ──
+#> ── Conflicts ─────────────────────────────────────────────────────────────────────────── natverse_conflicts() ──
 #> ✖ nat::intersect() masks base::intersect()
 #> ✖ nat::setdiff()   masks base::setdiff()
 #> ✖ nat::union()     masks base::union()
@@ -80,109 +80,99 @@ natverse_conflicts()
 You can check if all the packages within `natverse` are up to date with:
 
 ``` r
-natverse_update()
+natverse_deps()
 #> 
-#> The following natverse dependencies are missing!
+#> All natverse dependencies are up-to-date, see details below:
 #> 
-#>   fishatlas, insectbrainr
-#> 
-#> We recommend installing them by running:
-#> natverse_update(update=TRUE)
-#> 
-#> The following natverse dependencies are out-of-date, see details below:
-#> 
-#> We recommend updating them by running:
-#> natverse_update(update=TRUE)
-#> 
-#> package              remote         local          source   status      
-#> -------------------  -------------  -------------  -------  -------     
-#> DependenciesGraphs   3c33e2a1c...   3c33e2a1c...   GitHub   ✔           
-#> drvid                cdd2a48c7...   cdd2a48c7...   GitHub   ✔           
-#> elmr                 e6da79673...   e34dc5e4d...   GitHub   ✖           
-#> fafbseg              479dd1340...   1a8bcea96...   GitHub   ✖           
-#> nat                  a74a03719...   1.9.1.9000     GitHub   ✖           
-#> neuprintr            fb25dcb9c...   f3e640d19...   GitHub   ✖           
-#> fishatlas            b7e85e4e1...   NA             GitHub   ❓      
-#> insectbrainr         1a967c964...   NA             GitHub   ❓      
-#> cli                  1.1.0          1.1.0          CRAN     ✔           
-#> crayon               1.3.4          1.3.4          CRAN     ✔           
-#> dplyr                0.8.3          0.8.3          CRAN     ✔           
-#> magrittr             1.5            1.5            CRAN     ✔           
-#> pbapply              1.4-2          1.4-2          CRAN     ✔           
-#> purrr                0.3.2          0.3.2          CRAN     ✔           
-#> sessioninfo          1.1.1          1.1.1          CRAN     ✔           
-#> stringr              1.4.0          1.4.0          CRAN     ✔           
-#> tibble               2.1.3          2.1.3          CRAN     ✔           
-#> remotes              2.1.0          2.1.0          CRAN     ✔           
-#> ggplot2              3.2.1          3.2.1          CRAN     ✔           
-#> here                 0.1            0.1            CRAN     ✔           
-#> knitr                1.25           1.25           CRAN     ✔           
-#> png                  0.1-7          0.1-7          CRAN     ✔           
-#> spelling             2.1            2.1            CRAN     ✔           
-#> testthat             6b707165d...   4a546faf6...   GitHub   ✖           
-#> visNetwork           2.0.8          2.0.8          CRAN     ✔           
-#> rgl                  0.100.30       0.100.30       CRAN     ✔           
-#> nabor                0.5.0          0.5.0          CRAN     ✔           
-#> igraph               1.2.4.1        1.2.4.1        CRAN     ✔           
-#> filehash             2.4-2          2.4-2          CRAN     ✔           
-#> digest               0.6.21         0.6.21         CRAN     ✔           
-#> nat.utils            0.5.1          0.5.1          CRAN     ✔           
-#> plyr                 1.8.4          1.8.4          CRAN     ✔           
-#> yaml                 2.2.0          2.2.0          CRAN     ✔           
-#> assertthat           0.2.1          0.2.1          CRAN     ✔           
-#> glue                 1.3.1          1.3.1          CRAN     ✔           
-#> pkgconfig            2.0.3          2.0.3          CRAN     ✔           
-#> R6                   2.4.0          2.4.0          CRAN     ✔           
-#> Rcpp                 1.0.2          1.0.2          CRAN     ✔           
-#> rlang                0.4.0          0.4.0          CRAN     ✔           
-#> tidyselect           0.2.5          0.2.5          CRAN     ✔           
-#> BH                   1.69.0-1       1.69.0-1       CRAN     ✔           
-#> plogr                0.2.0          0.2.0          CRAN     ✔           
-#> withr                2.1.2          2.1.2          CRAN     ✔           
-#> stringi              1.4.3          1.4.3          CRAN     ✔           
-#> fansi                0.4.0          0.4.0          CRAN     ✔           
-#> pillar               1.4.2          1.4.2          CRAN     ✔           
-#> gtable               0.3.0          0.3.0          CRAN     ✔           
-#> lazyeval             0.2.2          0.2.2          CRAN     ✔           
-#> reshape2             1.4.3          1.4.3          CRAN     ✔           
-#> scales               1.0.0          1.0.0          CRAN     ✔           
-#> viridisLite          0.3.0          0.3.0          CRAN     ✔           
-#> rprojroot            1.3-2          1.3-2          CRAN     ✔           
-#> evaluate             0.14           0.14           CRAN     ✔           
-#> highr                0.8            0.8            CRAN     ✔           
-#> markdown             1.1            1.1            CRAN     ✔           
-#> xfun                 dbe34e41d...   1385b1673...   GitHub   ✖           
-#> commonmark           1.7            1.7            CRAN     ✔           
-#> xml2                 1.2.2          1.2.2          CRAN     ✔           
-#> hunspell             3.0            3.0            CRAN     ✔           
-#> praise               1.0.0          1.0.0          CRAN     ✔           
-#> htmlwidgets          1.5.1          1.5.1          CRAN     ✔           
-#> htmltools            0.4.0          0.4.0          CRAN     ✔           
-#> jsonlite             1.6            1.6            CRAN     ✔           
-#> shiny                1.4.0          1.4.0          CRAN     ✔           
-#> crosstalk            1.0.0          1.0.0          CRAN     ✔           
-#> manipulateWidget     0.10.0         0.10.0         CRAN     ✔           
-#> miniUI               0.1.1.1        0.1.1.1        CRAN     ✔           
-#> base64enc            0.1-3          0.1-3          CRAN     ✔           
-#> webshot              0.5.1          0.5.1          CRAN     ✔           
-#> httpuv               1.5.2          1.5.2          CRAN     ✔           
-#> mime                 0.7            0.7            CRAN     ✔           
-#> xtable               1.8-4          1.8-4          CRAN     ✔           
-#> sourcetools          0.1.7          0.1.7          CRAN     ✔           
-#> later                1.0.0          1.0.0          CRAN     ✔           
-#> promises             1.1.0          1.1.0          CRAN     ✔           
-#> fastmap              1.0.1          1.0.1          CRAN     ✔           
-#> callr                3.3.2          3.3.2          CRAN     ✔           
-#> processx             3.4.1          3.4.1          CRAN     ✔           
-#> labeling             0.3            0.3            CRAN     ✔           
-#> munsell              0.5.0          0.5.0          CRAN     ✔           
-#> RColorBrewer         1.1-2          1.1-2          CRAN     ✔           
-#> colorspace           1.4-1          1.4-1          CRAN     ✔           
-#> utf8                 1.1.4          1.1.4          CRAN     ✔           
-#> vctrs                0.2.0          0.2.0          CRAN     ✔           
-#> ps                   1.3.0          1.3.0          CRAN     ✔           
-#> backports            1.1.5          1.1.5          CRAN     ✔           
-#> ellipsis             0.3.0          0.3.0          CRAN     ✔           
-#> zeallot              0.1.0          0.1.0          CRAN     ✔           
+#> package              remote         local          source   status 
+#> -------------------  -------------  -------------  -------  -------
+#> DependenciesGraphs   3c33e2a1c...   3c33e2a1c...   GitHub   ✔      
+#> drvid                cdd2a48c7...   cdd2a48c7...   GitHub   ✔      
+#> elmr                 e6da79673...   e6da79673...   GitHub   ✔      
+#> fafbseg              479dd1340...   479dd1340...   GitHub   ✔      
+#> nat                  30ea6d540...   30ea6d540...   GitHub   ✔      
+#> neuprintr            fb25dcb9c...   fb25dcb9c...   GitHub   ✔      
+#> fishatlas            b7e85e4e1...   b7e85e4e1...   GitHub   ✔      
+#> insectbrainr         1a967c964...   1a967c964...   GitHub   ✔      
+#> cli                  1.1.0          1.1.0          CRAN     ✔      
+#> crayon               1.3.4          1.3.4          CRAN     ✔      
+#> dplyr                0.8.3          0.8.3          CRAN     ✔      
+#> magrittr             1.5            1.5            CRAN     ✔      
+#> pbapply              1.4-2          1.4-2          CRAN     ✔      
+#> purrr                0.3.2          0.3.2          CRAN     ✔      
+#> sessioninfo          1.1.1          1.1.1          CRAN     ✔      
+#> stringr              1.4.0          1.4.0          CRAN     ✔      
+#> tibble               2.1.3          2.1.3          CRAN     ✔      
+#> remotes              2.1.0          2.1.0          CRAN     ✔      
+#> ggplot2              3.2.1          3.2.1          CRAN     ✔      
+#> here                 0.1            0.1            CRAN     ✔      
+#> knitr                1.25           1.25           CRAN     ✔      
+#> png                  0.1-7          0.1-7          CRAN     ✔      
+#> spelling             2.1            2.1            CRAN     ✔      
+#> testthat             ab6104481...   ab6104481...   GitHub   ✔      
+#> visNetwork           2.0.8          2.0.8          CRAN     ✔      
+#> rgl                  0.100.30       0.100.30       CRAN     ✔      
+#> nabor                0.5.0          0.5.0          CRAN     ✔      
+#> igraph               1.2.4.1        1.2.4.1        CRAN     ✔      
+#> filehash             2.4-2          2.4-2          CRAN     ✔      
+#> digest               0.6.21         0.6.21         CRAN     ✔      
+#> nat.utils            0.5.1          0.5.1          CRAN     ✔      
+#> plyr                 1.8.4          1.8.4          CRAN     ✔      
+#> yaml                 2.2.0          2.2.0          CRAN     ✔      
+#> assertthat           0.2.1          0.2.1          CRAN     ✔      
+#> glue                 1.3.1          1.3.1          CRAN     ✔      
+#> pkgconfig            2.0.3          2.0.3          CRAN     ✔      
+#> R6                   2.4.0          2.4.0          CRAN     ✔      
+#> Rcpp                 1.0.2          1.0.2          CRAN     ✔      
+#> rlang                61631c624...   61631c624...   GitHub   ✔      
+#> tidyselect           0.2.5          0.2.5          CRAN     ✔      
+#> BH                   1.69.0-1       1.69.0-1       CRAN     ✔      
+#> plogr                0.2.0          0.2.0          CRAN     ✔      
+#> withr                2.1.2          2.1.2          CRAN     ✔      
+#> stringi              1.4.3          1.4.3          CRAN     ✔      
+#> fansi                0.4.0          0.4.0          CRAN     ✔      
+#> pillar               1.4.2          1.4.2          CRAN     ✔      
+#> gtable               0.3.0          0.3.0          CRAN     ✔      
+#> lazyeval             0.2.2          0.2.2          CRAN     ✔      
+#> reshape2             1.4.3          1.4.3          CRAN     ✔      
+#> scales               1.0.0          1.0.0          CRAN     ✔      
+#> viridisLite          0.3.0          0.3.0          CRAN     ✔      
+#> rprojroot            1.3-2          1.3-2          CRAN     ✔      
+#> evaluate             0.14           0.14           CRAN     ✔      
+#> highr                0.8            0.8            CRAN     ✔      
+#> markdown             1.1            1.1            CRAN     ✔      
+#> xfun                 ec877015c...   ec877015c...   GitHub   ✔      
+#> commonmark           1.7            1.7            CRAN     ✔      
+#> xml2                 1.2.2          1.2.2          CRAN     ✔      
+#> hunspell             3.0            3.0            CRAN     ✔      
+#> praise               1.0.0          1.0.0          CRAN     ✔      
+#> htmlwidgets          1.5.1          1.5.1          CRAN     ✔      
+#> htmltools            0.4.0          0.4.0          CRAN     ✔      
+#> jsonlite             1.6            1.6            CRAN     ✔      
+#> shiny                1.4.0          1.4.0          CRAN     ✔      
+#> crosstalk            1.0.0          1.0.0          CRAN     ✔      
+#> manipulateWidget     0.10.0         0.10.0         CRAN     ✔      
+#> miniUI               0.1.1.1        0.1.1.1        CRAN     ✔      
+#> base64enc            0.1-3          0.1-3          CRAN     ✔      
+#> webshot              0.5.1          0.5.1          CRAN     ✔      
+#> httpuv               1.5.2          1.5.2          CRAN     ✔      
+#> mime                 0.7            0.7            CRAN     ✔      
+#> xtable               1.8-4          1.8-4          CRAN     ✔      
+#> sourcetools          0.1.7          0.1.7          CRAN     ✔      
+#> later                1.0.0          1.0.0          CRAN     ✔      
+#> promises             1.1.0          1.1.0          CRAN     ✔      
+#> fastmap              1.0.1          1.0.1          CRAN     ✔      
+#> callr                3.3.2          3.3.2          CRAN     ✔      
+#> processx             3.4.1          3.4.1          CRAN     ✔      
+#> labeling             0.3            0.3            CRAN     ✔      
+#> munsell              0.5.0          0.5.0          CRAN     ✔      
+#> RColorBrewer         1.1-2          1.1-2          CRAN     ✔      
+#> colorspace           1.4-1          1.4-1          CRAN     ✔      
+#> utf8                 1.1.4          1.1.4          CRAN     ✔      
+#> vctrs                0.2.0          0.2.0          CRAN     ✔      
+#> ps                   1.3.0          1.3.0          CRAN     ✔      
+#> backports            1.1.5          1.1.5          CRAN     ✔      
+#> ellipsis             0.3.0          0.3.0          CRAN     ✔      
+#> zeallot              0.1.0          0.1.0          CRAN     ✔      
 #> RcppEigen            0.3.3.5.0      0.3.3.5.0      CRAN     ✔
 ```

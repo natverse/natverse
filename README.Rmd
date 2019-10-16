@@ -34,17 +34,17 @@ if(!requireNamespace('remotes')) install.packages('remotes')
 remotes::install_github("natverse/natverse")
 ```
 
-Once installed, you can update natverse and all its dependencies like so:
+Once installed, you can update the elements of the natverse package and its dependecies like:
 
 ```r
-remotes::update_packages('natverse')
+natverse_update(update = TRUE, install_missing = TRUE,dep = TRUE)
 ```
 This will ask you to confirm whether you want to update dependencies (and their dependencies).
 
-If want to upgrade all dependencies without answering any questions:
+If want to upgrade the natverse package itself:
 
 ```r
-remotes::update_packages('natverse', upgrade='always')
+remotes::update_packages('natverse')
 ```
 
 ## Example
@@ -63,6 +63,6 @@ natverse_conflicts()
 
 You can check if all the packages within `natverse` are up to date with:
 
-```{r updates_both}
-natverse_update()
+```{r check status}
+natverse_deps()
 ```

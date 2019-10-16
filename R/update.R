@@ -1,17 +1,17 @@
 #' print status of natverse dependencies
 #' This will check to see if all natverse packages (and optionally (if
-#' \code{dependencies = TRUE}), their dependencies )
-#' @param dependencies If \code{TRUE}, will also check all dependencies of natverse packages.
+#' \code{recursive = TRUE}), their dependencies )
+#' @param recursive If \code{TRUE}, will also check all dependencies of natverse packages.
 #' @return A character vector containing packages that are either missing or are not up-to-date.
 #' @export
 #' @examples
 #' \dontrun{
 #' natverse_deps()
 #' }
-natverse_deps <- function(dependencies = TRUE) {
+natverse_deps <- function(recursive = TRUE) {
 
   #Get details of the packages first..
-  pkgstatus_df <- remotes::dev_package_deps(find.package("natverse"),dependencies = dependencies)
+  pkgstatus_df <- remotes::dev_package_deps(find.package("natverse"),dependencies = recursive,)
 
   #Now convert them to a readable format..
   deps <- data.frame(package=character(nrow(pkgstatus_df)),remote=character(nrow(pkgstatus_df)),
@@ -21,6 +21,8 @@ natverse_deps <- function(dependencies = TRUE) {
   deps$remote <- pkgstatus_df$available
   deps$local <- pkgstatus_df$installed
   deps$source <- format.remotes(pkgstatus_df$remote)
+  deps$diff <-  pkgstatus_df$diff
+
 
   ## Status values from remotes package..
   ## -2 = not installed, but available on CRAN
@@ -77,10 +79,24 @@ natverse_deps <- function(dependencies = TRUE) {
 
   }
     cli::cat_line()
-    cli::cat_line(format(knitr::kable(deps,format = "pandoc")))
+    cli::cat_line(format(knitr::kable(deps[, c(1:4,6)],format = "pandoc")))
     cli::cat_line()
 
+    deps$repo <-  lapply(pkgstatus_df$remote, function(x) x$username)
+    deps[deps$source == 'CRAN','repo'] <- 'https://cran.rstudio.com/'
+
     pckglist = unique(pckglist)
+
+    pckglist_df <- data.frame(package=character(length(pckglist)),source=character(length(pckglist)),
+                              reponame=character(length(pckglist)),status=character(length(pckglist)),
+                              stringsAsFactors=FALSE)
+    pckglist_df$package = deps[deps$package %in% pckglist, 'package']
+    pckglist_df$source = deps[deps$package %in% pckglist, 'source']
+    pckglist_df$reponame = deps[deps$package %in% pckglist, 'repo']
+    pckglist_df$status = deps[deps$package %in% pckglist, 'diff']
+
+    invisible(pckglist_df)
+
 
 }
 
@@ -90,22 +106,40 @@ natverse_deps <- function(dependencies = TRUE) {
 #' \code{recursive = TRUE}), their dependencies ) are up-to-date, and will
 #' update them (optionally (if \code{update = TRUE})) if they are missing or are not up-to-date!
 #' @param update If \code{TRUE}, will actually update the packages
+#' @param install_missing If \code{TRUE}, will install the missing packages
 #' @param recursive If \code{TRUE}, will also check all dependencies of natverse packages.
-#' @param dependencies this parameter is passed onto function \code{\link[remotes]{update_packages}},
-#' indicating which dependencies
-#' to update here NA stands for "Depends", "Imports" and "LinkingTo" .
 #' @param ... extra arguments to pass to \code{\link[remotes]{update_packages}}.
 #' @export
 #' @examples
 #' \dontrun{
 #' natverse_update()
 #' }
-natverse_update <- function(update=FALSE, recursive = TRUE, dependencies = NA, ...) {
-  pkgs=c('natverse', natverse_deps(dependencies = recursive))
+natverse_update <- function(update=FALSE, install_missing = FALSE, recursive = TRUE,
+                            ...) {
+  pkgs_list=natverse_deps(recursive)
   if(interactive())
-    message("Checking for remote updates for ", length(pkgs), " packages ...")
-  if(update)
-    remotes::update_packages(pkgs, ...)
+    message("Checking for remote updates for ", nrow(pkgs_list), " packages ...")
+  missing_df <- pkgs_list[pkgs_list$status == -2L,]
+  if(install_missing && nrow(missing_df)>0){
+
+   #First install missing CRAN packages..
+    temp_df <- missing_df[missing_df$source == 'CRAN',]
+    if (nrow(temp_df)>0){
+      remotes::install_cran(temp_df$package, ...)}
+   #Next install missing Github packages..
+    temp_df <- missing_df[missing_df$source == 'GitHub',]
+    if (nrow(temp_df)>0){
+      temp_df$repfullname <- paste0(temp_df$reponame,'/',temp_df$package)
+      remotes::install_github(temp_df$repfullname, ...)}
+
+    #This is to check again the state of dependencies
+    pkgs_list=natverse_deps(recursive)
+  }
+  if(update){
+
+    # Now perform the updates
+    remotes::update_packages(pkgs_list$package, ...)
+  }
 }
 
 
