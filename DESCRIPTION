@@ -53,7 +53,10 @@ Suggests:
     png,
     spelling,
     testthat (>= 2.1.0),
-    visNetwork (>= 0.2.1)
+    visNetwork (>= 0.2.1),
+    alphashape3d,
+    Morpho,
+    Rvcg
 Remotes: 
     datastorm-open/DependenciesGraphs,
     natverse/drvid,
