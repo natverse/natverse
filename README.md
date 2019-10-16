@@ -26,7 +26,7 @@ remotes::install_github("natverse/natverse")
 ```
 
 Once installed, you can update the elements of the natverse package and
-its dependecies like:
+its dependencies like:
 
 ``` r
 natverse_update(update = TRUE, install_missing = TRUE,dep = TRUE)

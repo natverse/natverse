@@ -21,7 +21,7 @@ Authors@R:
 Description: Provides functionality for installing and updating
     all nat packages and friends in one go. This includes both CRAN and
     github only packages. Other functionalities like checking conflicts
-    are also provided. Inspired from tidyverse and dtupdate packages.
+    are also provided. Inspired by tidyverse and dtupdate packages.
 License: GPL-3
 URL: https://github.com/natverse/natverse
 BugReports: https://github.com/natverse/natverse/issues
@@ -66,3 +66,4 @@ Remotes:
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
+Language: en-GB
