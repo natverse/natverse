@@ -31,7 +31,7 @@ You can install the latest version as shown below:
 
 ```r
 if(!requireNamespace('remotes')) install.packages('remotes')
-remotes::install_github("natverse/natverse")
+remotes::install_github("natverse/natverse", dependencies = TRUE)
 ```
 
 Once installed, you can update the elements of the natverse package and its dependencies like:
