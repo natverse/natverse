@@ -4,22 +4,25 @@
 \alias{natverse_update}
 \title{Check status of natverse packages and (optionally) update if necessary}
 \usage{
-natverse_update(update = FALSE, install_missing = FALSE,
+natverse_update(update = FALSE, install_missing = update,
   recursive = TRUE, ...)
 }
 \arguments{
-\item{update}{If \code{TRUE}, will actually update the packages}
+\item{update}{If \code{TRUE}, will actually update the packages rather than
+just reporting the status of dependent packages.}
 
-\item{install_missing}{If \code{TRUE}, will install the missing packages}
+\item{install_missing}{If \code{TRUE}, will install any missing packages.}
 
-\item{recursive}{If \code{TRUE}, will also check all dependencies of natverse packages.}
+\item{recursive}{If \code{TRUE}, will also check all dependencies of natverse
+packages.}
 
 \item{...}{extra arguments to pass to \code{\link[remotes]{update_packages}}.}
 }
 \description{
 This will check to see if all natverse packages (and optionally (if
 \code{recursive = TRUE}), their dependencies ) are up-to-date, and will
-update them (optionally (if \code{update = TRUE})) if they are missing or are not up-to-date!
+update them (optionally (if \code{update = TRUE})) if they are missing or are
+not up-to-date!
 }
 \examples{
 \dontrun{

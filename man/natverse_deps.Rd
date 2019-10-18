@@ -6,10 +6,12 @@
 This will check to see if all natverse packages (and optionally (if
 \code{recursive = TRUE}), their dependencies )}
 \usage{
-natverse_deps(recursive = TRUE)
+natverse_deps(recursive = TRUE, ...)
 }
 \arguments{
 \item{recursive}{If \code{TRUE}, will also check all dependencies of natverse packages.}
+
+\item{...}{extra arguments to pass to \code{\link[base]{find.package}}.}
 }
 \value{
 A character vector containing packages that are either missing or are not up-to-date.

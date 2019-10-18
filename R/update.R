@@ -2,16 +2,64 @@
 #' This will check to see if all natverse packages (and optionally (if
 #' \code{recursive = TRUE}), their dependencies )
 #' @param recursive If \code{TRUE}, will also check all dependencies of natverse packages.
+#' @param ... extra arguments to pass to \code{\link[base]{find.package}}.
 #' @return A character vector containing packages that are either missing or are not up-to-date.
 #' @export
 #' @examples
 #' \dontrun{
 #' natverse_deps()
 #' }
-natverse_deps <- function(recursive = TRUE) {
+natverse_deps <- function(recursive = TRUE, ...) {
 
-  #Get details of the packages first..
-  pkgstatus_df <- remotes::dev_package_deps(find.package("natverse"),dependencies = recursive,)
+  #Get details of the dependencies of the main package here ('natverse') that exists both on CRAN and GitHub first..
+  pkgstatus_df <- remotes::dev_package_deps(find.package("natverse", ...),dependencies = recursive)
+
+  ## The below code is only necessary as the remotes package ignores dependencies of non-cran packages (Github) at
+  ##  the first level
+
+  #Now collect only the develop (github) packages in the first level (these are the ones not processed by the
+  #remotes package further recursively)..
+  firstleveldep <- remotes::local_package_deps(find.package("natverse", ...),dependencies = recursive)
+  #Convert them to remotes to recognize github pacakges from cran..
+  firstlevelremote <- structure(lapply(firstleveldep, remotes:::package2remote), class = "remotes")
+  is_github_remote <- vapply(firstlevelremote, inherits, logical(1), "github_remote")
+  firstlevelgitpkg <- firstleveldep[is_github_remote]
+
+
+  #Now load the second level dependencies of the firstlevelgit packages
+  github_deps <- unique(unlist(lapply(find.package(firstlevelgitpkg, ...), remotes::local_package_deps,
+                                      dependencies = recursive)))
+
+  #Now subset only those that have not been listed before..
+  github_deps <- setdiff(github_deps,pkgstatus_df$package)
+
+  # Remove base packages from those dependencies
+  inst <- utils::installed.packages()
+  base <- unname(inst[inst[, "Priority"] %in% c("base", "recommended"), "Package"])
+  github_deps <- setdiff(github_deps, base)
+
+  #Now check the versions for these refined dependencies alone..
+  refined_pkgs <- lapply(find.package(github_deps, ...), remotes:::load_pkg_description)
+  repos_list <- lapply(refined_pkgs, `[`, c('repository'))
+  is_cran<- unlist(lapply(repos_list, function(x) {if(is.null(x[[1]])){FALSE} else if (x[[1]] == 'CRAN') {TRUE}}))
+
+  #Get the git and cran ones seperately..
+  cran_pkgslist <- refined_pkgs[is_cran]
+  github_pkgslist <- refined_pkgs[!is_cran]
+
+
+  #Checking cran versions..
+  cran_pkgs <- unlist(lapply(cran_pkgslist, `[[`, c('package')))
+  cranstatus_df <- get_remoteversions(cran_pkgs,'CRAN')
+
+  #Checking github versions..
+  github_pkgs <- unlist(lapply(github_pkgslist, function(x) {paste0(x$remoteusername,'/',x$remoterepo)}))
+  githubstatus_df <- get_remoteversions(github_pkgs,'Github')
+
+  #Now finally append them all..
+  allpkgstatus_df <- rbind(pkgstatus_df,cranstatus_df,githubstatus_df)
+
+  pkgstatus_df <- allpkgstatus_df
 
   #Now convert them to a readable format..
   deps <- data.frame(package=character(nrow(pkgstatus_df)),remote=character(nrow(pkgstatus_df)),
@@ -20,7 +68,7 @@ natverse_deps <- function(recursive = TRUE) {
   deps$package  <- pkgstatus_df$package
   deps$remote <- pkgstatus_df$available
   deps$local <- pkgstatus_df$installed
-  deps$source <- format.remotes(pkgstatus_df$remote)
+  deps$source <- remotes:::format.remotes(pkgstatus_df$remote)
   deps$diff <-  pkgstatus_df$diff
 
 
@@ -49,8 +97,8 @@ natverse_deps <- function(recursive = TRUE) {
   deps$missing <- NULL
 
   #Just trunacate the SHA1 hash
-  deps$remote <- lapply(deps$remote, format_str, width = 12)
-  deps$local <- lapply(deps$local, format_str, width = 12)
+  deps$remote <- lapply(deps$remote, remotes:::format_str, width = 12)
+  deps$local <- lapply(deps$local, remotes:::format_str, width = 12)
 
   pckglist = character(length = 0)
 
@@ -78,6 +126,11 @@ natverse_deps <- function(recursive = TRUE) {
     pckglist = c(pckglist,behind_temp$package)
 
   }
+
+    row.names(deps) <- deps$package
+    deps <- deps[ order(row.names(deps)), ]
+    row.names(deps) <- NULL
+
     cli::cat_line()
     cli::cat_line(format(knitr::kable(deps[, c(1:4,6)],format = "pandoc")))
     cli::cat_line()
@@ -104,17 +157,20 @@ natverse_deps <- function(recursive = TRUE) {
 #'
 #' This will check to see if all natverse packages (and optionally (if
 #' \code{recursive = TRUE}), their dependencies ) are up-to-date, and will
-#' update them (optionally (if \code{update = TRUE})) if they are missing or are not up-to-date!
-#' @param update If \code{TRUE}, will actually update the packages
-#' @param install_missing If \code{TRUE}, will install the missing packages
-#' @param recursive If \code{TRUE}, will also check all dependencies of natverse packages.
+#' update them (optionally (if \code{update = TRUE})) if they are missing or are
+#' not up-to-date!
+#' @param update If \code{TRUE}, will actually update the packages rather than
+#'   just reporting the status of dependent packages.
+#' @param install_missing If \code{TRUE}, will install any missing packages.
+#' @param recursive If \code{TRUE}, will also check all dependencies of natverse
+#'   packages.
 #' @param ... extra arguments to pass to \code{\link[remotes]{update_packages}}.
 #' @export
 #' @examples
 #' \dontrun{
 #' natverse_update()
 #' }
-natverse_update <- function(update=FALSE, install_missing = FALSE, recursive = TRUE,
+natverse_update <- function(update=FALSE, install_missing = update, recursive = TRUE,
                             ...) {
   pkgs_list=natverse_deps(recursive)
   if(interactive())
@@ -143,21 +199,44 @@ natverse_update <- function(update=FALSE, install_missing = FALSE, recursive = T
 }
 
 
-# local functions taken directly from the package remotes
+# local functions
 
-format.remotes <- function(x, ...) {
-  vapply(x, format, character(1))
-}
+get_remoteversions <- function (pkgnames, pkgtype = c('CRAN','Github')){
 
-format_str <- function(x, width = Inf, trim = TRUE, justify = "none", ...) {
-  x <- format(x, trim = trim, justify = justify, ...)
+  pkgtype <- match.arg(pkgtype)
 
-  if (width < Inf) {
-    x_width <- nchar(x, "width")
-    too_wide <- x_width > width
-    if (any(too_wide)) {
-      x[too_wide] <- paste0(substr(x[too_wide], 1, width - 3), "...")
-    }
+  #Convert the CRAN packages to remote to check for versions..
+  if (pkgtype == 'CRAN'){
+    cran_remt <- structure(lapply(pkgnames, remotes:::package2remote, repos = getOption("repos"),
+                                  type=getOption("pkgType")), class = "remotes")
+    inst_ver <- vapply(pkgnames, remotes:::local_sha, character(1))
+    cran_ver <- vapply(cran_remt, function(x) remotes:::remote_sha(x), character(1))
+    is_cran_remote <- vapply(cran_remt, inherits, logical(1), "cran_remote")
+    diff <- remotes:::compare_versions(inst_ver, cran_ver, is_cran_remote)
+    cranstatus_df <- structure(data.frame(package = pkgnames,installed = inst_ver,
+                                          available = cran_ver,diff = diff,
+                                          is_cran = is_cran_remote,
+                                          stringsAsFactors = FALSE),class = c("package_deps", "data.frame"))
+
+    cranstatus_df$remote <- cran_remt
+
+    return(cranstatus_df)
+
+  } else if (pkgtype == 'Github'){
+
+    git_remote <- lapply(pkgnames, remotes:::parse_one_remote)
+
+    package <- vapply(git_remote, function(x) remotes:::remote_package_name(x), character(1), USE.NAMES = FALSE)
+    installed <- vapply(package, function(x) remotes:::local_sha(x), character(1), USE.NAMES = FALSE)
+    available <- vapply(git_remote, function(x) remotes:::remote_sha(x), character(1), USE.NAMES = FALSE)
+
+    diff <- installed == available
+    diff <- ifelse(!is.na(diff) & diff, remotes:::CURRENT, remotes:::BEHIND)
+    diff[is.na(installed)] <- remotes:::UNINSTALLED
+    githubstatus_df <- remotes:::package_deps_new(package, installed, available, diff, is_cran = FALSE, git_remote)
+
+    return(githubstatus_df)
+
   }
-  x
+
 }
