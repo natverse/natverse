@@ -6,10 +6,12 @@
 This will check to see if all natverse packages (and optionally (if
 \code{recursive = TRUE}), their dependencies )}
 \usage{
-natverse_deps(recursive = TRUE, ...)
+natverse_deps(recursive = TRUE, verbose = TRUE, ...)
 }
 \arguments{
 \item{recursive}{If \code{TRUE}, will also check all dependencies of natverse packages.}
+
+\item{verbose}{Set to TRUE if you want to display the table of dependencies and warnings etc.}
 
 \item{...}{extra arguments to pass to \code{\link[base]{find.package}}.}
 }

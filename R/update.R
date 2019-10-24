@@ -2,6 +2,7 @@
 #' This will check to see if all natverse packages (and optionally (if
 #' \code{recursive = TRUE}), their dependencies )
 #' @param recursive If \code{TRUE}, will also check all dependencies of natverse packages.
+#' @param verbose Set to TRUE if you want to display the table of dependencies and warnings etc.
 #' @param ... extra arguments to pass to \code{\link[base]{find.package}}.
 #' @return A character vector containing packages that are either missing or are not up-to-date.
 #' @export
@@ -9,13 +10,16 @@
 #' \dontrun{
 #' natverse_deps()
 #' }
-natverse_deps <- function(recursive = TRUE, ...) {
+natverse_deps <- function(recursive = TRUE,verbose = TRUE, ...) {
 
-  #Get details of the dependencies of the main package here ('natverse') that exists both on CRAN and GitHub first..
+  #Get details of the dependencies of the main package here ('natverse') that has been installed in this machine
+  #The first level dependencies that exists both on CRAN and GitHub..
+  #For e.g. for `natverse` -> `fafbseg`,`fishatlas`,`insectbrainr` etc.
   pkgstatus_df <- remotes::dev_package_deps(find.package("natverse", ...),dependencies = recursive)
 
   ## The below code is only necessary as the remotes package ignores dependencies of non-cran packages (Github) at
-  ##  the first level
+  ##  the second level like `fafbsegdata` below..
+  #For e.g. for `fafbseg` -> `fafbsegdata`
 
   #Now collect only the develop (github) packages in the first level (these are the ones not processed by the
   #remotes package further recursively)..
@@ -40,12 +44,46 @@ natverse_deps <- function(recursive = TRUE, ...) {
 
   #Now check the versions for these refined dependencies alone..
   refined_pkgs <- lapply(find.package(github_deps, ...), remotes_load_pkg_description)
+
+  #The following packages don't have local description files (which means not installed locally, could
+  #be packages from either `CRAN` or `GitHub`)
+  missing_pkgs <- setdiff(github_deps,unlist(lapply(refined_pkgs, `[`, c('package'))))
+
   repos_list <- lapply(refined_pkgs, `[`, c('repository'))
-  is_cran<- unlist(lapply(repos_list, function(x) {if(is.null(x[[1]])){FALSE} else if (x[[1]] == 'CRAN') {TRUE}}))
+  is_cran<- which(unlist(lapply(repos_list, function(x) {if(is.null(x[[1]])){FALSE}
+                                                         else if (x[[1]] == 'CRAN') {TRUE}})))
+
+  repos_list <- lapply(refined_pkgs, `[`, c('remotetype'))
+  is_github<- which(unlist(lapply(repos_list, function(x) {if(is.null(x[[1]])){FALSE}
+                                                           else if (x[[1]] == 'github') {TRUE}})))
+
+  #Warn about packages that are common in config between GitHub and CRAN
+  if (length(intersect(is_github,is_cran)) && (verbose == TRUE)){
+    cli::cat_line(crayon::red(
+      "\nThe following packages below are configured as both CRAN and Github!\n"))
+    cli::cat_line("  ", paste0(unlist(lapply(refined_pkgs[intersect(is_github,is_cran)], `[[`, c('package'))),
+                               collapse = ','))
+    cli::cat_line("\nWe recommend checking their configurations")
+
+  }
+
+  #Warn about packages that have no known information (either locally installed or githubs where repo not known as they have
+  #been locally modified by a developer)..
+  localpkgsids <- refined_pkgs[setdiff(1:length(refined_pkgs), union(is_github,is_cran))]
+  localpkgs <- unlist(lapply(localpkgsids,`[[`, c('package')))
+
+  noinfopkgs <- union(localpkgs,missing_pkgs)
+  #Warn about packages that are common in config between GitHub and CRAN
+  if (length(noinfopkgs) && (verbose == TRUE)){
+    cli::cat_line(crayon::yellow(
+      "\nThe following packages are either locally installed or information about them is missing!\n"))
+    cli::cat_line("  ", paste0(noinfopkgs, collapse = ', '))
+    cli::cat_line("\nPlease install them manually from their appropriate source locations")
+  }
 
   #Get the git and cran ones seperately..
   cran_pkgslist <- refined_pkgs[is_cran]
-  github_pkgslist <- refined_pkgs[!is_cran]
+  github_pkgslist <- refined_pkgs[is_github]
 
 
   #Checking cran versions..
@@ -70,6 +108,8 @@ natverse_deps <- function(recursive = TRUE, ...) {
   deps$local <- pkgstatus_df$installed
   deps$source <- remotes_format.remotes(pkgstatus_df$remote)
   deps$diff <-  pkgstatus_df$diff
+  deps$repo <-  lapply(pkgstatus_df$remote, function(x) x$username)
+  deps[deps$source == 'CRAN','repo'] <- 'https://cran.rstudio.com/'
 
 
   ## Status values from remotes package..
@@ -102,7 +142,7 @@ natverse_deps <- function(recursive = TRUE, ...) {
 
   pckglist = character(length = 0)
 
-  if (nrow(behind_temp) == 0) {
+  if (nrow(behind_temp) == 0 && (verbose == TRUE)) {
     cli::cat_line(crayon::green(
       paste0(
         "\nAll natverse dependencies are up-to-date, see details below:"
@@ -110,33 +150,36 @@ natverse_deps <- function(recursive = TRUE, ...) {
     ))
   } else{
 
-    if(nrow(missing_temp)) {
-      cli::cat_line(crayon::red(
-        "\nThe following natverse dependencies are missing!\n"))
-      cli::cat_line("  ", paste0(missing_temp$package, collapse = ', '))
-      cli::cat_line("\nWe recommend installing them by running:")
-      cli::cat_line('natverse_update(update=TRUE)')
+    if (verbose == TRUE){
 
-      pckglist = c(pckglist,missing_temp$package)
-    }
-    cli::cat_line(crayon::red(
-      paste0("\nThe following natverse dependencies are out-of-date, see details below:")))
-    cli::cat_line("\nWe recommend updating them by running:")
-    cli::cat_line('natverse_update(update=TRUE)')
-    pckglist = c(pckglist,behind_temp$package)
+      if(nrow(missing_temp)) {
+        cli::cat_line(crayon::red(
+          "\nThe following natverse dependencies are missing!\n"))
+        cli::cat_line("  ", paste0(missing_temp$package, collapse = ', '))
+        cli::cat_line("\nWe recommend installing them by running:")
+        cli::cat_line('natverse_update(update=TRUE)')
 
+        pckglist = c(pckglist,missing_temp$package)
+      }
+        cli::cat_line(crayon::red(
+        paste0("\nThe following natverse dependencies are out-of-date, see details below:")))
+        cli::cat_line("\nWe recommend updating them by running:")
+        cli::cat_line('natverse_update(update=TRUE)')
+        pckglist = c(pckglist,behind_temp$package)
+
+      }
   }
 
     row.names(deps) <- deps$package
     deps <- deps[ order(row.names(deps)), ]
     row.names(deps) <- NULL
 
-    cli::cat_line()
-    cli::cat_line(format(knitr::kable(deps[, c(1:4,6)],format = "pandoc")))
-    cli::cat_line()
-
-    deps$repo <-  lapply(pkgstatus_df$remote, function(x) x$username)
-    deps[deps$source == 'CRAN','repo'] <- 'https://cran.rstudio.com/'
+    if (verbose == TRUE){
+        cli::cat_line()
+        cli::cat_line(format(knitr::kable(deps[, c('package','remote','local','source','repo','status')],
+                                      format = "pandoc")))
+        cli::cat_line()
+    }
 
     pckglist = unique(pckglist)
 
@@ -189,7 +232,7 @@ natverse_update <- function(update=FALSE, install_missing = update, recursive = 
       remotes::install_github(temp_df$repfullname, ...)}
 
     #This is to check again the state of dependencies
-    pkgs_list=natverse_deps(recursive)
+    pkgs_list=natverse_deps(recursive, verbose = FALSE)
   }
   if(update){
 
