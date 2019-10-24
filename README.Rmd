@@ -37,9 +37,15 @@ remotes::install_github("natverse/natverse", dependencies = TRUE)
 Once installed, you can update the elements of the natverse package and its dependencies like:
 
 ```r
-natverse_update(update = TRUE, install_missing = TRUE, dependencies = TRUE)
+natverse_update(update = TRUE)
 ```
 This will ask you to confirm whether you want to update dependencies (and their dependencies).
+
+However, if you are in a hurry and want to save time from the questions use like below:
+
+```r
+natverse_update(update=TRUE, upgrade = 'always')
+```
 
 If want to upgrade the natverse package itself:
 
