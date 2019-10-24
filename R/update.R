@@ -324,7 +324,7 @@ local_remotes <- function(pkgname) {
     expr = {
             pkgdir <- find.package(pkgname)
 
-            pkg <- remotes:::load_pkg_description(pkgdir)
+            pkg <- remotes_load_pkg_description(pkgdir)
             #For github packages..
             remotetype <- pkg$remotetype
 
