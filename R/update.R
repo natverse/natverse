@@ -28,6 +28,15 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   #remotes package further recursively)..
   firstleveldep <- remotes::local_package_deps(suppressWarnings(find.package("natverse", ...)),
                                                dependencies = recursive)
+
+  #This is to undo changes done by `dev_package_deps` incase a package was installed from CRAN but a newer version is found in Github, the function should stick with the repo or source where it was installed from..
+  temppkgstatus_df <- remotes::package_deps(firstleveldep)
+  temppkgstatus_df <- temppkgstatus_df[temppkgstatus_df$is_cran,] #Choose only CRAN packages now..
+  temppkgstatus_df <- temppkgstatus_df[!is.na(temppkgstatus_df$available),] #Sanity check with version number..
+
+  pkgstatus_df <- pkgstatus_df[!(pkgstatus_df$package %in% temppkgstatus_df$package), ]
+  pkgstatus_df <- rbind(pkgstatus_df,temppkgstatus_df) #Put them back now..
+
   #Convert them to remotes to recognize github pacakges from cran..
   firstlevelremote <- structure(lapply(firstleveldep, remotes_package2remote), class = "remotes")
   is_github_remote <- vapply(firstlevelremote, inherits, logical(1), "github_remote")
@@ -199,11 +208,11 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
          shortdeps <- deps[deps$diff!=0,]
          if (nrow(shortdeps)>0){
          cli::cat_line(format(knitr::kable(shortdeps[, c('package','remote','local','source','repo','status')],
-                                           format = "pandoc")))}
+                                           format = "pandoc",row.names=FALSE)))}
 
        }else{
         cli::cat_line(format(knitr::kable(deps[, c('package','remote','local','source','repo','status')],
-                                      format = "pandoc")))}
+                                      format = "pandoc",row.names=FALSE)))}
         cli::cat_line()
     }
 
