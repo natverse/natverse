@@ -81,8 +81,7 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
 
   }
 
-  #Warn about packages that have no known information (either locally installed or githubs where repo not known as they have
-  #been locally modified by a developer)..
+ #Warn about packages that have no known information (either locally installed or githubs where repo not known as   they have been locally modified by a developer)..
   localpkgsids <- refined_pkgs[setdiff(1:length(refined_pkgs), union(is_github,is_cran))]
   localpkgs <- unlist(lapply(localpkgsids,`[[`, c('package')))
 
@@ -337,8 +336,12 @@ local_remotes <- function(pkgname) {
 
             },
     error = function(errormsg){
-      message( "package: ", pkgname, " was not found\n")
+      message( "\npackage: ", pkgname, " was not found\n")
       return (NA)
-    }
+            },
+    warning = function(warnmsg){
+      message( "\npackage: ", pkgname, " was not found\n")
+      return (NA)
+          }
   )
 }
