@@ -14,6 +14,14 @@
 #' }
 natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,...) {
 
+  # set CRAN repository if unset
+  r = getOption("repos")
+  if(isTRUE(is.na(r["CRAN"])) || "@CRAN@" %in% r) {
+    # CRAN option completely unset or has signalling value
+    r["CRAN"] = "https://cloud.r-project.org/"
+    op <- options(repos = r)
+    on.exit(options(op))
+  }
 
   #Get details of the dependencies of the main package here ('natverse') that has been installed in this machine
   #The first level dependencies that exists both on CRAN and GitHub..
