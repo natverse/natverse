@@ -5,7 +5,8 @@
 \title{Check status of natverse packages and (optionally) update if necessary}
 \usage{
 natverse_update(update = FALSE, install_missing = update,
-  recursive = TRUE, ...)
+  recursive = TRUE, upgrade = c("default", "ask", "always", "never"),
+  ...)
 }
 \arguments{
 \item{update}{If \code{TRUE}, will actually update the packages rather than
@@ -16,12 +17,18 @@ just reporting the status of dependent packages.}
 \item{recursive}{If \code{TRUE}, will also check all dependencies of natverse
 packages.}
 
-\item{...}{extra arguments to pass to \code{\link[remotes]{update_packages}}.}
+\item{upgrade}{Whether or not to ask you about updating the dependencies of
+natverse packages. The 'default' value will ask in interactive session. Set
+to 'always' to install all dependencies without prompts. See
+\code{\link[remotes]{update_packages}} for further details.}
+
+\item{...}{extra arguments to pass to \code{\link[remotes]{update_packages}},
+\code{\link[remotes]{install_cran}}, \code{\link[remotes]{install_github}}.}
 }
 \description{
-This will check to see if all natverse packages (and optionally (if
+This will check to see if all natverse packages (and by default, when
 \code{recursive = TRUE}), their dependencies ) are up-to-date, and will
-update them (optionally (if \code{update = TRUE})) if they are missing or are
+update them (optionally, if \code{update = TRUE}) if they are missing or are
 not up-to-date!
 }
 \examples{

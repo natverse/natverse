@@ -242,13 +242,20 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
 #' @param install_missing If \code{TRUE}, will install any missing packages.
 #' @param recursive If \code{TRUE}, will also check all dependencies of natverse
 #'   packages.
-#' @param ... extra arguments to pass to \code{\link[remotes]{update_packages}}.
+#' @param ... extra arguments to pass to \code{\link[remotes]{update_packages}},
+#'   \code{\link[remotes]{install_cran}}, \code{\link[remotes]{install_github}}.
+#' @param upgrade Whether or not to ask you about updating the dependencies of
+#'   natverse packages. The 'default' value will ask in interactive session. Set
+#'   to 'always' to install all dependencies without prompts. See
+#'   \code{\link[remotes]{update_packages}} for further details.
 #' @export
 #' @examples
 #' \dontrun{
 #' natverse_update()
 #' }
-natverse_update <- function(update=FALSE, install_missing = update, recursive = TRUE,
+natverse_update <- function(update=FALSE, install_missing = update,
+                            recursive = TRUE,
+                            upgrade = c("default", "ask", "always", "never"),
                             ...) {
   pkgs_list=natverse_deps(recursive)
   if(interactive())
@@ -259,12 +266,12 @@ natverse_update <- function(update=FALSE, install_missing = update, recursive = 
    #First install missing CRAN packages..
     temp_df <- missing_df[missing_df$source == 'CRAN',]
     if (nrow(temp_df)>0){
-      remotes::install_cran(temp_df$package, ...)}
+      remotes::install_cran(temp_df$package, upgrade=upgrade, ...)}
    #Next install missing Github packages..
     temp_df <- missing_df[missing_df$source == 'GitHub',]
     if (nrow(temp_df)>0){
       temp_df$repfullname <- paste0(temp_df$reponame,'/',temp_df$package)
-      remotes::install_github(temp_df$repfullname, ...)}
+      remotes::install_github(temp_df$repfullname, upgrade=upgrade, ...)}
 
     #This is to check again the state of dependencies
     pkgs_list=natverse_deps(recursive, verbose = FALSE)
@@ -272,7 +279,7 @@ natverse_update <- function(update=FALSE, install_missing = update, recursive = 
   if(update){
 
     # Now perform the updates
-    remotes::update_packages(pkgs_list$package, ...)
+    remotes::update_packages(pkgs_list$package, upgrade=upgrade, ...)
   }
 }
 
