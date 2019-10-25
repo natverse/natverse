@@ -11,6 +11,11 @@ Provides functionality for installing and updating
     github only packages. Other functionalities like checking conflicts
     are also provided. Inspired by tidyverse and dtupdate packages.
 }
+\details{
+The key function for end users is \code{\link{natverse_update}} which will
+allow you to conveniently udpate all natverse packages and their
+dependencies.
+}
 \seealso{
 Useful links:
 \itemize{

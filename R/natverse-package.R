@@ -1,3 +1,7 @@
+#' @details The key function for end users is \code{\link{natverse_update}} which will
+#' allow you to conveniently udpate all natverse packages and their
+#' dependencies.
+#'
 #' @keywords internal
 #' @import nat elmr
 "_PACKAGE"
