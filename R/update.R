@@ -33,7 +33,8 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   ##  the second level like `fafbsegdata` below..
   #For e.g. for `fafbseg` -> `fafbsegdata`
 
-  #Now collect only the develop (github) packages in the first level (these are the ones not processed by the
+  #Now collect only the develop (github) packages in the first level
+  #(these are the ones not processed by the
   #remotes package further recursively)..
   firstleveldep <- remotes::local_package_deps(suppressWarnings(find.package("natverse", ...)),
                                                dependencies = recursive)
@@ -87,18 +88,15 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
     cli::cat_line("  ", paste0(unlist(lapply(refined_pkgs[intersect(is_github,is_cran)], `[[`, c('package'))),
                                collapse = ','))
     cli::cat_line("\nWe recommend checking their configurations")
-
   }
 
  #Warn about packages that have no known information (either locally installed or githubs where repo not known as   they have been locally modified by a developer)..
   localpkgsids <- refined_pkgs[setdiff(1:length(refined_pkgs), union(is_github,is_cran))]
   localpkgs <- unlist(lapply(localpkgsids,`[[`, c('package')))
 
-
   #Get the git and cran ones seperately..
   cran_pkgslist <- refined_pkgs[is_cran]
   github_pkgslist <- refined_pkgs[is_github]
-
 
   #Checking cran versions..
   cran_pkgs <- unlist(lapply(cran_pkgslist, `[[`, c('package')))
@@ -121,7 +119,6 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   noinfopkgs <- union(noinfopkgs,localstatpkg)
   #Warn about packages that are locally installed or information is missing..
   if (length(noinfopkgs)){
-
     pkgstatus_df <- pkgstatus_df[!(pkgstatus_df$package %in% noinfopkgs),]
 
     if (verbose == TRUE){
@@ -130,7 +127,6 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
       cli::cat_line("  ", paste0(noinfopkgs, collapse = ', '))
       cli::cat_line("\nPlease install them manually from their appropriate source locations")
     }
-
   }
 
   #Now convert them to a readable format..
@@ -208,26 +204,34 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
     deps <- deps[ order(row.names(deps)), ]
     row.names(deps) <- NULL
 
-    if (verbose == TRUE){
-
+    if (verbose == TRUE) {
       cli::cat_line()
 
-       if (display_all == FALSE){
-         shortdeps <- deps[deps$diff!=0,]
-         if (nrow(shortdeps)>0){
-         cli::cat_line(format(knitr::kable(shortdeps[, c('package','remote','local','source','repo','status')],
-                                           format = "pandoc",row.names=FALSE)))}
+      if (display_all == FALSE) {
+        shortdeps <- deps[deps$diff != 0,]
+        if (nrow(shortdeps) > 0) {
+          cli::cat_line(format(
+            knitr::kable(shortdeps[, c('package', 'remote', 'local', 'source', 'repo', 'status')],
+                         format = "pandoc", row.names =
+                           FALSE)
+          ))
+        }
 
-       }else{
-        cli::cat_line(format(knitr::kable(deps[, c('package','remote','local','source','repo','status')],
-                                      format = "pandoc",row.names=FALSE)))}
-        cli::cat_line()
+      } else{
+        cli::cat_line(format(knitr::kable(
+          deps[, c('package', 'remote', 'local', 'source', 'repo', 'status')],
+          format = "pandoc", row.names = FALSE
+        )))
+      }
+      cli::cat_line()
     }
 
     pckglist = unique(pckglist)
 
-    pckglist_df <- data.frame(package=character(length(pckglist)),source=character(length(pckglist)),
-                              reponame=character(length(pckglist)),status=character(length(pckglist)),
+    pckglist_df <- data.frame(package=character(length(pckglist)),
+                              source=character(length(pckglist)),
+                              reponame=character(length(pckglist)),
+                              status=character(length(pckglist)),
                               stringsAsFactors=FALSE)
     pckglist_df$package = deps[deps$package %in% pckglist, 'package']
     pckglist_df$source = deps[deps$package %in% pckglist, 'source']
@@ -235,15 +239,13 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
     pckglist_df$status = deps[deps$package %in% pckglist, 'diff']
 
     invisible(pckglist_df)
-
-
 }
 
 #' Check status of natverse packages and (optionally) update if necessary
 #'
-#' This will check to see if all natverse packages (and optionally (if
+#' This will check to see if all natverse packages (and by default, when
 #' \code{recursive = TRUE}), their dependencies ) are up-to-date, and will
-#' update them (optionally (if \code{update = TRUE})) if they are missing or are
+#' update them (optionally, if \code{update = TRUE}) if they are missing or are
 #' not up-to-date!
 #' @param update If \code{TRUE}, will actually update the packages rather than
 #'   just reporting the status of dependent packages.
@@ -256,21 +258,33 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
 #'   natverse packages. The 'default' value will ask in interactive session. Set
 #'   to 'always' to install all dependencies without prompts. See
 #'   \code{\link[remotes]{update_packages}} for further details.
+#'
 #' @export
 #' @examples
 #' \dontrun{
+#' # check status of natverse and its dependencies
 #' natverse_update()
+#'
+#' # ... actually install any updates
+#' natverse_update(update=TRUE)
+#'
+#' # update any indirect dependencies without requesting your confirmation
+#' natverse_update(update=TRUE, upgrade='always')
 #' }
 natverse_update <- function(update=FALSE, install_missing = update,
                             recursive = TRUE,
                             upgrade = c("default", "ask", "always", "never"),
                             ...) {
-  pkgs_list=natverse_deps(recursive)
   if(interactive())
-    message("Checking for remote updates for ", nrow(pkgs_list), " packages ...")
-  missing_df <- pkgs_list[pkgs_list$status == -2L,]
-  if(install_missing && nrow(missing_df)>0){
+    message("Checking for remote package updates ...")
+  pkgs_list=natverse_deps(recursive)
 
+  if(nrow(pkgs_list)==0)
+    return(invisible())
+
+  missing_df <- pkgs_list[pkgs_list$status == -2L,]
+
+  if(install_missing && nrow(missing_df)>0){
    #First install missing CRAN packages..
     temp_df <- missing_df[missing_df$source == 'CRAN',]
     if (nrow(temp_df)>0){
@@ -284,8 +298,8 @@ natverse_update <- function(update=FALSE, install_missing = update,
     #This is to check again the state of dependencies
     pkgs_list=natverse_deps(recursive, verbose = FALSE)
   }
-  if(update){
 
+  if(update){
     # Now perform the updates
     remotes::update_packages(pkgs_list$package, upgrade=upgrade, ...)
   }

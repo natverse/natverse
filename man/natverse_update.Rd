@@ -33,6 +33,13 @@ not up-to-date!
 }
 \examples{
 \dontrun{
+# check status of natverse and its dependencies
 natverse_update()
+
+# ... actually install any updates
+natverse_update(update=TRUE)
+
+# update any indirect dependencies without requesting your confirmation
+natverse_update(update=TRUE, upgrade='always')
 }
 }
