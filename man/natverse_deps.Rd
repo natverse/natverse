@@ -8,23 +8,32 @@ natverse_deps(recursive = TRUE, verbose = TRUE, display_all = FALSE,
   ...)
 }
 \arguments{
-\item{recursive}{If \code{TRUE}, will also check all dependencies of natverse packages.}
+\item{recursive}{If \code{TRUE}, will also check all dependencies of natverse
+packages.}
 
-\item{verbose}{Set to TRUE if you want to display the table of dependencies and warnings etc.}
+\item{verbose}{Set to TRUE if you want to display the table of dependencies
+and warnings etc.}
 
-\item{display_all}{Set to TRUE if you want to display all the contents of the table.}
+\item{display_all}{Set to TRUE if you want to display all the contents of the
+table.}
 
 \item{...}{extra arguments to pass to \code{\link[base]{find.package}}.}
 }
 \value{
-A character vector containing packages that are either missing or are not up-to-date.
+A character vector containing packages that are either missing or are
+  not up-to-date.
 }
 \description{
 This will check to see if all natverse packages (and optionally (if
-\code{recursive = TRUE}), their dependencies )
+\code{recursive = TRUE}), their dependencies ). End users should probably
+just use the \code{\link{natverse_update}} function (which wraps
+\code{natverse_deps}.
 }
 \examples{
 \dontrun{
 natverse_deps()
 }
+}
+\seealso{
+\code{\link{natverse_update}}
 }
