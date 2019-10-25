@@ -2,9 +2,7 @@
 % Please edit documentation in R/update.R
 \name{natverse_deps}
 \alias{natverse_deps}
-\title{print status of natverse dependencies
-This will check to see if all natverse packages (and optionally (if
-\code{recursive = TRUE}), their dependencies )}
+\title{Print status of natverse dependencies}
 \usage{
 natverse_deps(recursive = TRUE, verbose = TRUE, display_all = FALSE,
   ...)
@@ -22,7 +20,6 @@ natverse_deps(recursive = TRUE, verbose = TRUE, display_all = FALSE,
 A character vector containing packages that are either missing or are not up-to-date.
 }
 \description{
-print status of natverse dependencies
 This will check to see if all natverse packages (and optionally (if
 \code{recursive = TRUE}), their dependencies )
 }

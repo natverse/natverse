@@ -1,4 +1,5 @@
-#' print status of natverse dependencies
+#' Print status of natverse dependencies
+#'
 #' This will check to see if all natverse packages (and optionally (if
 #' \code{recursive = TRUE}), their dependencies )
 #' @param recursive If \code{TRUE}, will also check all dependencies of natverse packages.
