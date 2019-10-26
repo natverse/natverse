@@ -22,23 +22,33 @@ You can install the latest version as shown below:
 
 ``` r
 if(!requireNamespace('remotes')) install.packages('remotes')
-remotes::install_github("natverse/natverse")
+remotes::install_github("natverse/natverse", dependencies = TRUE)
 ```
 
-Once installed, you can update natverse and all its dependencies like
-so:
+Once installed, you check the status of all natverse packages and their
+dependencies like so:
+
+``` r
+natverse_update()
+```
+
+You can then update like so:
+
+``` r
+natverse_update(update = TRUE)
+```
+
+However, if you are in a hurry and want to save time from the questions
+use like below:
+
+``` r
+natverse_update(update=TRUE, upgrade = 'always')
+```
+
+If want to upgrade the natverse package itself:
 
 ``` r
 remotes::update_packages('natverse')
-```
-
-This will ask you to confirm whether you want to update dependencies
-(and their dependencies).
-
-If want to upgrade all dependencies without answering any questions:
-
-``` r
-remotes::update_packages('natverse', upgrade='always')
 ```
 
 ## Example
@@ -48,8 +58,8 @@ This will load the `natverse` package:
 ``` r
 library(natverse)
 #> Loading required package: elmr
-#> Loading required package: nat.flybrains
-#> Loading required package: nat.templatebrains
+#> Loading required package: catmaid
+#> Loading required package: httr
 #> Loading required package: nat
 #> Loading required package: rgl
 #> Registered S3 method overwritten by 'nat':
@@ -60,9 +70,9 @@ library(natverse)
 #> The following objects are masked from 'package:base':
 #> 
 #>     intersect, setdiff, union
+#> Loading required package: nat.flybrains
+#> Loading required package: nat.templatebrains
 #> Loading required package: nat.nblast
-#> Loading required package: catmaid
-#> Loading required package: httr
 ```
 
 Conflicts between functions added to the search path by loading the
@@ -71,7 +81,7 @@ running:
 
 ``` r
 natverse_conflicts()
-#> ── Conflicts ───────────────────────────────────────────────── natverse_conflicts() ──
+#> ── Conflicts ───────────────────────────────────────────────────────── natverse_conflicts() ──
 #> ✖ nat::intersect() masks base::intersect()
 #> ✖ nat::setdiff()   masks base::setdiff()
 #> ✖ nat::union()     masks base::union()
@@ -80,39 +90,32 @@ natverse_conflicts()
 You can check if all the packages within `natverse` are up to date with:
 
 ``` r
-natverse_update()
+natverse_deps()
+#> 
+#> package: fishatlas was not found
+#> 
+#> package: insectbrainr was not found
+#> 
+#> The following packages are either locally installed or information about them is missing!
+#> 
+#>   catnat, fafbseg, Rvcg
+#> 
+#> Please install them manually from their appropriate source locations
 #> 
 #> The following natverse dependencies are missing!
 #> 
 #>   fishatlas, insectbrainr
 #> 
 #> We recommend installing them by running:
-#> remotes::update_packages("natverse")
+#> natverse_update(update=TRUE)
 #> 
-#> The following natverse dependencies from CRAN GITHUB are out-of-date, see details below:
+#> The following natverse dependencies are out-of-date, see details below:
 #> 
-#> package        remote       local        source                                   status      
-#> -------------  -----------  -----------  ---------------------------------------  -------     
-#> cli            1.1.0        1.1.0        CRAN (R 3.6.0)                           ✔           
-#> crayon         1.3.4        1.3.4        CRAN (R 3.6.0)                           ✔           
-#> dplyr          0.8.3        0.8.3        CRAN (R 3.6.0)                           ✔           
-#> fafbseg        NA           0.6.4        local                                    ❓      
-#> magrittr       1.5          1.5          CRAN (R 3.6.0)                           ✔           
-#> pbapply        1.4.2        1.4.1        CRAN (R 3.6.0)                           ✖           
-#> purrr          0.3.2        0.3.2        CRAN (R 3.6.0)                           ✔           
-#> remotes        2.1.0        2.1.0        CRAN (R 3.6.0)                           ✔           
-#> sessioninfo    1.1.1        1.1.1        CRAN (R 3.6.0)                           ✔           
-#> stringr        1.4.0        1.4.0        CRAN (R 3.6.0)                           ✔           
-#> tibble         2.1.3        2.1.3        CRAN (R 3.6.0)                           ✔           
-#> drvid          0.3.0        0.3.0        Github (jefferis/drvid@cdd2a48)          ✔           
-#> elmr           0.5.6        0.5.6        Github (jefferis/elmr@5bec417)           ✔           
-#> nat            1.9.1.9000   1.9.1.9000   Github (jefferis/nat@3ab1eda)            ✔           
-#> neuprintr      0.2.0        0.2.0        Github (jefferislab/neuprintr@ec18f21)   ✔           
-#> fishatlas      NA           NA           NA                                       ❓      
-#> insectbrainr   NA           NA           NA                                       ❓      
+#> We recommend updating them by running:
+#> natverse_update(update=TRUE)
 #> 
-#> Start a clean R session then run:
-#> install.packages("pbapply")
+#> package        remote         local   source   repo       status      
+#> -------------  -------------  ------  -------  ---------  -------     
+#> fishatlas      b7e85e4e1...   NA      GitHub   natverse   ❓      
+#> insectbrainr   e80f497aa...   NA      GitHub   natverse   ❓
 ```
-
-This also prints instructions for how to update those dependencies.

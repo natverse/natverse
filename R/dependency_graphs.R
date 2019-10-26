@@ -20,10 +20,11 @@ list_corenatsupportpackages <- function(){
 #' @param color_list : Name of color to use
 #' @return List to graph
 #' @examples
+#' \dontrun{
 #' if (!require(DependenciesGraphs)) utils::install.packages("DependenciesGraphs")
 #' if (!require(visNetwork)) utils::install.packages("visNetwork")
 #' dep <- dependency_visualization('natverse', level = 'level_1')
-#'
+#' }
 #' @export
 dependency_visualization <- function(Packages = "All", level = c('level_1','level_2'),
                                      color_list = c("red", "blue", "green")) {
@@ -73,6 +74,7 @@ dependency_visualization <- function(Packages = "All", level = c('level_1','leve
 #' @param height : Height (optional, defaults to automatic sizing)
 #'
 #' @examples
+#' \dontrun{
 #' if (!require(DependenciesGraphs)) install.packages("DependenciesGraphs")
 #' if (!require(visNetwork)) install.packages("visNetwork")
 #' dep <- dependency_visualization('natverse', level = 'level_1')
@@ -80,7 +82,7 @@ dependency_visualization <- function(Packages = "All", level = c('level_1','leve
 #'
 #' # size
 #' dependency_plot(dep, height = "800px", width = "100%")
-#'
+#'}
 #' @export
 dependency_plot <- function(object, block = FALSE, width = NULL, height = NULL) {
   nodes <- data.frame(object[[1]])

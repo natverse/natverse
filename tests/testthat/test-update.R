@@ -1,3 +1,11 @@
+
+r = getOption("repos")
+r["CRAN"] = "http://cran.us.r-project.org"
+options(repos = r)
+
+
 test_that("natverse_update ", {
-  expect_is(natverse_update(source = 'CRAN'), 'data.frame')
+   pckgs <- natverse_deps()
+   expect_is(pckgs, 'data.frame')
 })
+

@@ -9,7 +9,12 @@
 Provides functionality for installing and updating
     all nat packages and friends in one go. This includes both CRAN and
     github only packages. Other functionalities like checking conflicts
-    are also provided. Inspired from tidyverse and dtupdate packages.
+    are also provided. Inspired by tidyverse and dtupdate packages.
+}
+\details{
+The key function for end users is \code{\link{natverse_update}} which will
+allow you to conveniently update all natverse packages and their
+dependencies.
 }
 \seealso{
 Useful links:

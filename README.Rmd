@@ -31,20 +31,32 @@ You can install the latest version as shown below:
 
 ```r
 if(!requireNamespace('remotes')) install.packages('remotes')
-remotes::install_github("natverse/natverse")
+remotes::install_github("natverse/natverse", dependencies = TRUE)
 ```
 
-Once installed, you can update natverse and all its dependencies like so:
+Once installed, you check the status of all natverse packages and their 
+dependencies like so:
+
+```r
+natverse_update()
+```
+
+You can then update like so:
+
+```r
+natverse_update(update = TRUE)
+```
+
+However, if you are in a hurry and want to save time from the questions use like below:
+
+```r
+natverse_update(update=TRUE, upgrade = 'always')
+```
+
+If want to upgrade the natverse package itself:
 
 ```r
 remotes::update_packages('natverse')
-```
-This will ask you to confirm whether you want to update dependencies (and their dependencies).
-
-If want to upgrade all dependencies without answering any questions:
-
-```r
-remotes::update_packages('natverse', upgrade='always')
 ```
 
 ## Example
@@ -63,8 +75,6 @@ natverse_conflicts()
 
 You can check if all the packages within `natverse` are up to date with:
 
-```{r updates_both}
-natverse_update()
+```{r check status}
+natverse_deps()
 ```
-
-This also prints instructions for how to update those dependencies.
