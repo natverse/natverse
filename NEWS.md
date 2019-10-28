@@ -1,3 +1,7 @@
+# natverse 0.2.1
+
+* add mouselightr package (suggested)
+
 # natverse 0.2.0
 
 * `natverse_update()`:

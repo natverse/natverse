@@ -1,7 +1,7 @@
 Type: Package
 Package: natverse
 Title: Install all NeuroAnatomy Toolbox packages
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
     c(person(given = "Gregory",
              family = "Jefferis",
@@ -46,6 +46,7 @@ Imports:
 Suggests:
     DependenciesGraphs,
     fishatlas,
+    mouselightr,
     ggplot2,
     here,
     insectbrainr,
@@ -65,7 +66,8 @@ Remotes:
     natverse/nat,
     natverse/neuprintr,
     natverse/fishatlas,
-    natverse/insectbrainr
+    natverse/insectbrainr,
+    natverse/mouselightr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
