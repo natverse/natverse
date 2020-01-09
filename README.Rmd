@@ -27,11 +27,13 @@ See https://natverse.github.io for more details.
 
 ## Installation
 
-You can install the latest version as shown below:
+You can install the latest version of natverse using NatManager as shown below:
 
 ```r
 if(!requireNamespace('remotes')) install.packages('remotes')
-remotes::install_github("natverse/natverse", dependencies = TRUE)
+remotes::install_github("natverse/NatManager")
+library(NatManager)
+NatManager::install('natverse', dependencies = TRUE)
 ```
 
 Once installed, you can update the elements of the natverse package and its dependencies like:
