@@ -20,11 +20,11 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Sridhar Jagannathan \email{j.sridharrajan@gmail.com} (0000-0002-2078-1145)
+\strong{Maintainer}: Sridhar Jagannathan \email{j.sridharrajan@gmail.com} (\href{https://orcid.org/0000-0002-2078-1145}{ORCID})
 
 Authors:
 \itemize{
-  \item Gregory Jefferis \email{jefferis@gmail.com} (0000-0002-0587-9355)
+  \item Gregory Jefferis \email{jefferis@gmail.com} (\href{https://orcid.org/0000-0002-0587-9355}{ORCID})
 }
 
 }
