@@ -13,23 +13,52 @@ knitr::opts_chunk$set(
 )
 ```
 
-# natverse <a href='https://natverse.github.io/'><img src='presentation/natverse_logo.png' align="right" height="138.5" /></a>
+# natverse <a href='https://natverse.github.io/'><img src='man/figures/logo.svg' align="right" height="138.5" /></a>
 
 <!-- badges: start -->
+[![natverse](https://img.shields.io/badge/natverse-Part%20of%20the%20natverse-a241b6)](https://natverse.github.io)
+[![Docs](https://img.shields.io/badge/docs-100%25-brightgreen.svg)](https://natverse.github.io/natverse/reference/)
+[![Travis build status](https://travis-ci.org/natverse/natverse.svg?branch=master)](https://travis-ci.org/natverse/natverse)
 <!-- badges: end -->
 
 The goal of natverse is to install all of the commonly used NeuroAnatomy Toolbox packages.
 
-See https://jefferis.github.io/nat/ for more details.
+See https://natverse.github.io for more details.
 
 ## Installation
 
 You can install the latest version as shown below:
 
-``` r
-# install.packages("devtools")
-devtools::install_github("SridharJagannathan/natverse")
+```r
+if(!requireNamespace('remotes')) install.packages('remotes')
+remotes::install_github("natverse/natverse", dependencies = TRUE)
 ```
+
+Once installed, you check the status of all natverse packages and their 
+dependencies like so:
+
+```r
+natverse_update()
+```
+
+You can then update like so:
+
+```r
+natverse_update(update = TRUE)
+```
+
+However, if you are in a hurry and want to save time from the questions use like below:
+
+```r
+natverse_update(update=TRUE, upgrade = 'always')
+```
+
+If want to upgrade the natverse package itself:
+
+```r
+remotes::update_packages('natverse')
+```
+
 ## Example
 
 This will load the `natverse` package:
@@ -38,21 +67,14 @@ This will load the `natverse` package:
 library(natverse)
 ```
 
-The conflicts created by `natverse` with other packages can be seen with
+Conflicts between functions added to the search path by loading the `natverse` and equivalently named functions in other packages can by running:
 
 ```{r conflicts}
 natverse_conflicts()
 ```
 
-You can check if all the packages within `natverse` are uptodate with:
+You can check if all the packages within `natverse` are up to date with:
 
-1.For dependencies installed via CRAN use
-
-```{r updates_CRAN}
-natverse_update(source = 'CRAN')
+```{r check status}
+natverse_deps()
 ```
-2.For dependencies installed via GitHub use
-```{r updates_GitHub}
-natverse_update(source = 'GITHUB')
-```
-

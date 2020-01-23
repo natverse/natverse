@@ -27,8 +27,9 @@ List all dependencies between natverse packages Adapted from the function
 \code{Pck.load.to.vis} in 'DependenciesGraphs'
 }
 \examples{
+\dontrun{
 if (!require(DependenciesGraphs)) utils::install.packages("DependenciesGraphs")
 if (!require(visNetwork)) utils::install.packages("visNetwork")
 dep <- dependency_visualization('natverse', level = 'level_1')
-
+}
 }

@@ -1,50 +1,77 @@
-Package: natverse
 Type: Package
+Package: natverse
 Title: Install all NeuroAnatomy Toolbox packages
-Version: 0.1.0
-Authors@R: c(person("Gregory","Jefferis", email="jefferis@gmail.com", 
-    role = c("aut"), comment = c(ORCID = "0000-0002-0587-9355")),
-    person("Sridhar","Jagannathan", email="j.sridharrajan@gmail.com", 
-    role = c("aut", "cre"), comment = c(ORCID = "0000-0002-2078-1145")))
-Description: Provides functionality for installing and updating all nat packages and friends in one go. This includes
-    both CRAN and github only packages. Other functionalities like checking conflicts are also provided. Inspired from
-    tidyverse and dtupdate packages.
+Version: 0.2.1
+Authors@R: 
+    c(person(given = "Gregory",
+             family = "Jefferis",
+             role = "aut",
+             email = "jefferis@gmail.com",
+             comment = c(ORCID = "0000-0002-0587-9355")),
+      person(given = "Sridhar",
+             family = "Jagannathan",
+             role = c("aut", "cre"),
+             email = "j.sridharrajan@gmail.com",
+             comment = c(ORCID = "0000-0002-2078-1145")),
+      person(given = "Alex",
+             family = "Bates",
+             role = c("ctb"),
+             email = "abates@mrc-lmb.cam.ac.uk",
+             comment = c(ORCID = "0000-0002-1195-0445")))
+Description: Provides functionality for installing and updating
+    all nat packages and friends in one go. This includes both CRAN and
+    github only packages. Other functionalities like checking conflicts
+    are also provided. Inspired by tidyverse and dtupdate packages.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/SridharJagannathan/natverse, https://jefferis.github.io/nat/
+URL: https://github.com/natverse/natverse, https://jefferis.github.io/nat/
 BugReports: https://github.com/SridharJagannathan/natverse/issues
 RoxygenNote: 7.0.2
 Depends: 
-    R (>= 3.1),
-    nat,
     elmr,
+    nat,
+    R (>= 3.1)
 Imports:
-    fafbseg,
-    drvid,
-    neuprintr,
-    pbapply,
     cli (>= 1.0.0),
     crayon (>= 1.3.4),
-    purrr (>= 0.2.4),
+    dplyr,
+    drvid,
+    fafbseg,
     magrittr (>= 1.5),
+    neuprintr,
+    pbapply,
+    purrr (>= 0.2.4),
+    sessioninfo,
     stringr (>= 1.3.0),
     tibble (>= 1.4.2),
-    dplyr
+    remotes
 Suggests:
-    spelling,
-    knitr,
     DependenciesGraphs,
-    visNetwork(>= 0.2.1),
-    hexSticker,
+    fishatlas,
+    mouselightr,
     ggplot2,
     here,
-    png,
-    mouselightr,
     insectbrainr,
-    fishatlas
-Remotes: natverse/nat,
+    knitr,
+    png,
+    spelling,
+    testthat (>= 2.1.0),
+    visNetwork (>= 0.2.1),
+    alphashape3d,
+    Morpho,
+    Rvcg
+Remotes: 
+    datastorm-open/DependenciesGraphs,
+    natverse/drvid,
     jefferis/elmr,
     jefferis/fafbseg,
-    natverse/drvid,
-    natverse/neuprintr
+    natverse/nat,
+    natverse/neuprintr,
+    natverse/fishatlas,
+    natverse/insectbrainr,
+    natverse/mouselightr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+Language: en-GB

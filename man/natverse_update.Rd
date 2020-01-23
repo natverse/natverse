@@ -2,22 +2,44 @@
 % Please edit documentation in R/update.R
 \name{natverse_update}
 \alias{natverse_update}
-\title{Update natverse packages}
+\title{Check status of natverse packages and (optionally) update if necessary}
 \usage{
-natverse_update(recursive = FALSE, source = "CRAN")
+natverse_update(update = FALSE, install_missing = update,
+  recursive = TRUE, upgrade = c("default", "ask", "always", "never"),
+  ...)
 }
 \arguments{
-\item{recursive}{If \code{TRUE}, will also check all dependencies of
-natverse packages.}
+\item{update}{If \code{TRUE}, will actually update the packages rather than
+just reporting the status of dependent packages.}
 
-\item{source}{set the source of updates 'CRAN' or 'GITHUB'
-natverse packages.}
+\item{install_missing}{If \code{TRUE}, will install any missing packages.}
+
+\item{recursive}{If \code{TRUE}, will also check all dependencies of natverse
+packages.}
+
+\item{upgrade}{Whether or not to ask you about updating the dependencies of
+natverse packages. The 'default' value will ask in interactive session. Set
+to 'always' to install all dependencies without prompts. See
+\code{\link[remotes]{update_packages}} for further details.}
+
+\item{...}{extra arguments to pass to \code{\link[remotes]{update_packages}},
+\code{\link[remotes]{install_cran}}, \code{\link[remotes]{install_github}}.}
 }
 \description{
-This will check to see if all natverse packages (and optionally (if recursive = TRUE), their
-dependencies ) are up-to-date, and will provide the command to perform the installation in one go!
-Adapted and modified from the following sources : update function in 'tidyverse' package, github_update function in 'dtupdate' package
+This will check to see if all natverse packages (and by default, when
+\code{recursive = TRUE}), their dependencies ) are up-to-date, and will
+update them (optionally, if \code{update = TRUE}) if they are missing or are
+not up-to-date!
 }
 \examples{
+\dontrun{
+# check status of natverse and its dependencies
 natverse_update()
+
+# ... actually install any updates
+natverse_update(update=TRUE)
+
+# update any indirect dependencies without requesting your confirmation
+natverse_update(update=TRUE, upgrade='always')
+}
 }
