@@ -14,7 +14,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/SridharJagannathan/natverse, https://jefferis.github.io/nat/
 BugReports: https://github.com/SridharJagannathan/natverse/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Depends: 
     R (>= 3.1),
     nat,
@@ -40,10 +40,11 @@ Suggests:
     ggplot2,
     here,
     png,
-    natverse/insectbrainr,
-    natverse/fishatlas
-Remotes: jefferis/nat,
+    mouselightr,
+    insectbrainr,
+    fishatlas
+Remotes: natverse/nat,
     jefferis/elmr,
     jefferis/fafbseg,
-    jefferis/drvid,
-    jefferislab/neuprintr
+    natverse/drvid,
+    natverse/neuprintr
