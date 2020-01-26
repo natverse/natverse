@@ -4,9 +4,13 @@
 \alias{natverse_update}
 \title{Check status of natverse packages and (optionally) update if necessary}
 \usage{
-natverse_update(update = FALSE, install_missing = update,
-  recursive = TRUE, upgrade = c("default", "ask", "always", "never"),
-  ...)
+natverse_update(
+  update = FALSE,
+  install_missing = update,
+  recursive = TRUE,
+  upgrade = c("default", "ask", "always", "never"),
+  ...
+)
 }
 \arguments{
 \item{update}{If \code{TRUE}, will actually update the packages rather than

@@ -25,11 +25,13 @@ Description: Provides functionality for installing and updating
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/natverse/natverse, https://jefferis.github.io/nat/
-BugReports: https://github.com/SridharJagannathan/natverse/issues
 RoxygenNote: 7.0.2
+Language: en-GB
+URL: https://github.com/natverse/natverse, https://jefferis.github.io/nat/
+BugReports: https://github.com/natverse/natverse/issues
 Depends: 
     elmr,
+    neuprintr,
     nat,
     R (>= 3.1)
 Imports:
@@ -39,7 +41,6 @@ Imports:
     drvid,
     fafbseg,
     magrittr (>= 1.5),
-    neuprintr,
     pbapply,
     purrr (>= 0.2.4),
     sessioninfo,
@@ -50,6 +51,7 @@ Suggests:
     DependenciesGraphs,
     fishatlas,
     mouselightr,
+    neuromorphr,
     ggplot2,
     here,
     insectbrainr,
@@ -70,8 +72,7 @@ Remotes:
     natverse/neuprintr,
     natverse/fishatlas,
     natverse/insectbrainr,
-    natverse/mouselightr
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 6.1.1
-Language: en-GB
+    natverse/mouselightr,
+    natverse/neuromorphr
+
+

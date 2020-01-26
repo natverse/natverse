@@ -4,8 +4,7 @@
 \alias{natverse_deps}
 \title{Print status of natverse dependencies}
 \usage{
-natverse_deps(recursive = TRUE, verbose = TRUE, display_all = FALSE,
-  ...)
+natverse_deps(recursive = TRUE, verbose = TRUE, display_all = FALSE, ...)
 }
 \arguments{
 \item{recursive}{If \code{TRUE}, will also check all dependencies of natverse
