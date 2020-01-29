@@ -20,21 +20,22 @@ dependencies.
 Useful links:
 \itemize{
   \item \url{https://github.com/natverse/natverse}
-  \item Report bugs at \url{https://github.com/natverse/natverse/issues}
+  \item \url{https://jefferis.github.io/nat/}
+  \item Report bugs at \url{https://github.com/SridharJagannathan/natverse/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Sridhar Jagannathan \email{j.sridharrajan@gmail.com} (0000-0002-2078-1145)
+\strong{Maintainer}: Sridhar Jagannathan \email{j.sridharrajan@gmail.com} (\href{https://orcid.org/0000-0002-2078-1145}{ORCID})
 
 Authors:
 \itemize{
-  \item Gregory Jefferis \email{jefferis@gmail.com} (0000-0002-0587-9355)
+  \item Gregory Jefferis \email{jefferis@gmail.com} (\href{https://orcid.org/0000-0002-0587-9355}{ORCID})
 }
 
 Other contributors:
 \itemize{
-  \item Alex Bates \email{abates@mrc-lmb.cam.ac.uk} (0000-0002-1195-0445) [contributor]
+  \item Alex Bates \email{abates@mrc-lmb.cam.ac.uk} (\href{https://orcid.org/0000-0002-1195-0445}{ORCID}) [contributor]
 }
 
 }
