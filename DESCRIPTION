@@ -23,20 +23,24 @@ Description: Provides functionality for installing and updating
     github only packages. Other functionalities like checking conflicts
     are also provided. Inspired by tidyverse and dtupdate packages.
 License: GPL-3
-URL: https://github.com/natverse/natverse
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.0.2
+Language: en-GB
+URL: https://github.com/natverse/natverse, https://natverse.github.io/nat/
 BugReports: https://github.com/natverse/natverse/issues
 Depends: 
     elmr,
     nat,
     R (>= 3.1)
 Imports:
+    neuprintr,
     cli (>= 1.0.0),
     crayon (>= 1.3.4),
     dplyr,
     drvid,
     fafbseg,
     magrittr (>= 1.5),
-    neuprintr,
     pbapply,
     purrr (>= 0.2.4),
     sessioninfo,
@@ -47,6 +51,7 @@ Suggests:
     DependenciesGraphs,
     fishatlas,
     mouselightr,
+    neuromorphr,
     ggplot2,
     here,
     insectbrainr,
@@ -67,8 +72,7 @@ Remotes:
     natverse/neuprintr,
     natverse/fishatlas,
     natverse/insectbrainr,
-    natverse/mouselightr
-Encoding: UTF-8
-LazyData: true
-RoxygenNote: 6.1.1
-Language: en-GB
+    natverse/mouselightr,
+    natverse/neuromorphr
+
+

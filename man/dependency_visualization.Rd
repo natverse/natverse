@@ -5,8 +5,11 @@
 \title{List all dependencies between natverse packages Adapted from the function
 \code{Pck.load.to.vis} in 'DependenciesGraphs'}
 \usage{
-dependency_visualization(Packages = "All", level = c("level_1",
-  "level_2"), color_list = c("red", "blue", "green"))
+dependency_visualization(
+  Packages = "All",
+  level = c("level_1", "level_2"),
+  color_list = c("red", "blue", "green")
+)
 }
 \arguments{
 \item{Packages}{: Names of packages to includes to extract}
