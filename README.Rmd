@@ -21,60 +21,71 @@ knitr::opts_chunk$set(
 [![Travis build status](https://travis-ci.org/natverse/natverse.svg?branch=master)](https://travis-ci.org/natverse/natverse)
 <!-- badges: end -->
 
-The goal of natverse is to install all of the commonly used NeuroAnatomy Toolbox packages.
+The natverse package is a wrapper for all of the commonly used NeuroAnatomy 
+Toolbox packages. This is convenient both for package installation and
+for loading/attaching these packages without many calls to `library()`.
 
-See https://natverse.github.io for more details.
+See http://natverse.org for more details.
 
 ## Installation
 
-You can install the latest version as shown below:
+The recommended approach to install the full natverse is to use a helper 
+package natmanager, which is available on CRAN. You can therefore do:
 
 ```r
-if(!requireNamespace('remotes')) install.packages('remotes')
-remotes::install_github("natverse/natverse", dependencies = TRUE)
+install.packages("natmanager")
+natmanager::install("natverse")
 ```
+See http://natverse.org/install for more details.
 
-Once installed, you check the status of all natverse packages and their 
-dependencies like so:
-
-```r
-natverse_update()
-```
-
-You can then update like so:
-
-```r
-natverse_update(update = TRUE)
-```
-
-However, if you are in a hurry and want to save time from the questions use like below:
-
-```r
-natverse_update(update=TRUE, upgrade = 'always')
-```
-
-If want to upgrade the natverse package itself:
-
-```r
-remotes::update_packages('natverse')
-```
-
-## Example
-
-This will load the `natverse` package:
+## Use
+Once installed, you can load the `natverse` package:
 
 ```{r example}
 library(natverse)
+# example 3D plot of some neurons
+plot(kcs20, col=type)
 ```
 
-Conflicts between functions added to the search path by loading the `natverse` and equivalently named functions in other packages can by running:
+
+## Installation Details
+
+### Conflicts and Dependencies
+
+The natverse package contains many packages and it is possible that
+there could be conflicts where functions in the natverse have the same
+name as another package.
 
 ```{r conflicts}
 natverse_conflicts()
 ```
 
-You can check if all the packages within `natverse` are up to date with:
+You can always choose the correct version by prepending the specific
+package name e.g. `nat::flip()` will select the nat version rather than any other.
 
-```{r check status}
-natverse_deps()
+### Updates
+Once installed, you check the status of all natverse packages and 
+their dependencies like so:
+
+```{r}
+natverse_update()
 ```
+
+You can then update like so:
+
+```{r, eval=FALSE}
+natverse_update(update = TRUE)
+```
+
+However, if you are in a hurry and want to save time from the questions use like below:
+
+```{r, eval=FALSE}
+natverse_update(update=TRUE, upgrade = 'always')
+```
+
+If want to upgrade the natverse package itself:
+
+```{r, eval=FALSE}
+remotes::update_packages('natverse')
+```
+
