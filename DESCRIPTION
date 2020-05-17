@@ -50,6 +50,7 @@ Suggests:
     DependenciesGraphs,
     fishatlas,
     fafbseg,
+    flycircuit,
     insectbrainr,
     mouselightr,
     nat.jrcbrains
@@ -68,11 +69,12 @@ Suggests:
 Remotes: 
     datastorm-open/DependenciesGraphs,
     natverse/drvid,
-    jefferis/elmr,
+    natverse/elmr,
     jefferis/fafbseg,
     natverse/nat,
     natverse/neuprintr,
     natverse/fishatlas,
+    natverse/flycircuit,
     natverse/insectbrainr,
     natverse/mouselightr,
     natverse/neuromorphr
