@@ -20,8 +20,8 @@ dependencies.
 Useful links:
 \itemize{
   \item \url{https://github.com/natverse/natverse}
-  \item \url{https://jefferis.github.io/nat/}
-  \item Report bugs at \url{https://github.com/SridharJagannathan/natverse/issues}
+  \item \url{https://natverse.github.io/nat/}
+  \item Report bugs at \url{https://github.com/natverse/natverse/issues}
 }
 
 }

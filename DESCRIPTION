@@ -25,7 +25,7 @@ Description: Provides functionality for installing and updating
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Language: en-GB
 URL: https://github.com/natverse/natverse, https://natverse.github.io/nat/
 BugReports: https://github.com/natverse/natverse/issues
@@ -53,7 +53,7 @@ Suggests:
     flycircuit,
     insectbrainr,
     mouselightr,
-    nat.jrcbrains
+    nat.jrcbrains,
     neuromorphr,
     alphashape3d,
     Morpho,
