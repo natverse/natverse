@@ -62,7 +62,9 @@ Suggests:
     visNetwork (>= 0.2.1),
     alphashape3d,
     Morpho,
-    Rvcg
+    Rvcg,
+    rJava,
+    nat.jrcbrains
 Remotes: 
     datastorm-open/DependenciesGraphs,
     natverse/drvid,
@@ -74,5 +76,4 @@ Remotes:
     natverse/insectbrainr,
     natverse/mouselightr,
     natverse/neuromorphr
-
-
+    natverse/nat.jrcbrains
