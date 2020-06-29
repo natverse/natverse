@@ -2,6 +2,9 @@
 
 language: R
 sudo: false
+r:
+  - oldrel
+  - release
 cache: packages
 addons:
   apt:
