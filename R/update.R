@@ -55,9 +55,10 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   pkgstatus_df <- pkgstatus_df[!(pkgstatus_df$package %in% temppkgstatus_df$package), ]
   pkgstatus_df <- rbind(pkgstatus_df,temppkgstatus_df) #Put them back now..
 
-  #Convert them to remotes to recognize github pacakges from cran..
-  firstlevelremote <- structure(lapply(firstleveldep, remotes_package2remote), class = "remotes")
-  is_github_remote <- vapply(firstlevelremote, inherits, logical(1), "github_remote")
+  #Get package descriptions to recognize github pacakges from cran..
+  firstlevelremote <- lapply(firstleveldep, tempremotes_package2remote)
+  is_github_remote <- vapply(firstlevelremote, inherits, logical(1), "github")
+
   firstlevelgitpkg <- firstleveldep[is_github_remote]
 
 
