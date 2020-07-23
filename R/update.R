@@ -56,7 +56,7 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   pkgstatus_df <- rbind(pkgstatus_df,temppkgstatus_df) #Put them back now..
 
   #Convert them to remotes to recognize github pacakges from cran..
-  firstlevelremote <- structure(lapply(firstleveldep, remotes_package2remote), class = "remotes")
+  firstlevelremote <- structure(lapply(firstleveldep, package2pseudoremote), class = "remotes")
   is_github_remote <- vapply(firstlevelremote, inherits, logical(1), "github_remote")
   firstlevelgitpkg <- firstleveldep[is_github_remote]
 
@@ -322,10 +322,10 @@ get_remoteversions <- function (pkgnames, pkgtype = c('CRAN','Github')){
 
   #Convert the CRAN packages to remote to check for versions..
   if (pkgtype == 'CRAN'){
-    cran_remt <- structure(lapply(pkgnames, remotes_package2remote, repos = getOption("repos"),
+    cran_remt <- structure(lapply(pkgnames, package2pseudoremote, repos = getOption("repos"),
                                   type=getOption("pkgType")), class = "remotes")
     inst_ver <- vapply(pkgnames, remotes_local_sha, character(1))
-    cran_ver <- vapply(cran_remt, function(x) remotes_remote_sha(x), character(1))
+    cran_ver <- vapply(cran_remt, function(x) remotes::remote_sha(x), character(1))
     is_cran_remote <- vapply(cran_remt, inherits, logical(1), "cran_remote")
     diff <- remotes_compare_versions(inst_ver, cran_ver, is_cran_remote)
     cranstatus_df <- structure(data.frame(package = pkgnames,installed = inst_ver,
@@ -343,7 +343,7 @@ get_remoteversions <- function (pkgnames, pkgtype = c('CRAN','Github')){
 
     package <- vapply(git_remote, function(x) remotes_remote_package_name(x), character(1), USE.NAMES = FALSE)
     installed <- vapply(package, function(x) remotes_local_sha(x), character(1), USE.NAMES = FALSE)
-    available <- vapply(git_remote, function(x) remotes_remote_sha(x), character(1), USE.NAMES = FALSE)
+    available <- vapply(git_remote, function(x) remotes::remote_sha(x), character(1), USE.NAMES = FALSE)
 
     diff <- installed == available
     diff <- ifelse(!is.na(diff) & diff, 'remotes'%:::%'CURRENT', 'remotes'%:::%'BEHIND')
