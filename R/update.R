@@ -339,7 +339,7 @@ get_remoteversions <- function (pkgnames, pkgtype = c('CRAN','Github')){
 
   } else if (pkgtype == 'Github'){
 
-    git_remote <- lapply(pkgnames, remotes_parse_one_remote)
+    git_remote <- lapply(pkgnames, parse_one_extra)
 
     package <- vapply(git_remote, function(x) remotes::remote_package_name(x), character(1), USE.NAMES = FALSE)
     installed <- vapply(package, function(x) remotes_local_sha(x), character(1), USE.NAMES = FALSE)

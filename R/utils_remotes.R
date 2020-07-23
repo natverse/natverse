@@ -89,3 +89,24 @@ format.github_remote <- function(x, ...) {
 format.local_remote <- function(x, ...) {
   "local"
 }
+
+
+parse_one_extra <- function(x, ...) {
+  pieces <- strsplit(x, "::", fixed = TRUE)[[1]]
+
+  if ((length(pieces) == 1) && grepl("/", pieces)) {
+    type <- "github"
+    repo <- pieces
+  } else if (length(pieces) == 2) {
+    type <- pieces[1]
+    repo <- pieces[2]
+  } else {
+    stop("Malformed remote specification '", x, "'", call. = FALSE)
+  }
+  tryCatch({
+    res <- remotes::github_remote(repo, ...)
+  }, error = function(e) stop("Unknown remote type: ", type, "\n  ", conditionMessage(e), call. = FALSE)
+  )
+  res
+}
+
