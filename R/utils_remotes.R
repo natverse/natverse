@@ -2,9 +2,15 @@ remote <- function(type, ...) {
   structure(list(...), class = c(paste0(type, "_remote"), "remote"))
 }
 
-#adapted from the remotes package to support only cran, github, local, url based installations..
+trim_ws <- function(x) {
+  gsub("^[[:space:]]+|[[:space:]]+$", "", x)
+}
 
-package2remote <- function(name, lib = .libPaths(), repos = getOption("repos"), type = getOption("pkgType")) {
+`%||%` <- function (a, b) if (!is.null(a)) a else b
+
+#adapted from the remotes package to support only cran, github, local installations..
+
+remotes_package2remote <- function(name, lib = .libPaths(), repos = getOption("repos"), type = getOption("pkgType")) {
 
   #get the package descriptions first..
   x <- tryCatch(utils::packageDescription(name, lib.loc = lib), error = function(e) NA, warning = function(e) NA)
@@ -41,8 +47,7 @@ package2remote <- function(name, lib = .libPaths(), repos = getOption("repos"), 
                          subdir = x$RemoteSubdir,
                          username = x$RemoteUsername,
                          ref = x$RemoteRef,
-                         sha = x$RemoteSha,
-                         auth_token = github_pat()),
+                         sha = x$RemoteSha),
          local = remote("local",
                         path = trim_ws(x$RemoteUrl),
                         subdir = x$RemoteSubdir,
@@ -50,11 +55,6 @@ package2remote <- function(name, lib = .libPaths(), repos = getOption("repos"), 
                           # Packages installed locally might have RemoteSha == NA_character_
                           x$RemoteSha %||% x$Version
                         }),
-         url = remote("url",
-                      url = trim_ws(x$RemoteUrl),
-                      subdir = x$RemoteSubdir,
-                      config = x$RemoteConfig,
-                      pkg_type = x$RemotePkgType %||% type),
          stop(sprintf("can't convert package %s with RemoteType '%s' to remote", name, x$RemoteType))
   )
 }

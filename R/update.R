@@ -58,7 +58,6 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   #Convert them to remotes to recognize github pacakges from cran..
   firstlevelremote <- structure(lapply(firstleveldep, remotes_package2remote), class = "remotes")
   is_github_remote <- vapply(firstlevelremote, inherits, logical(1), "github_remote")
-
   firstlevelgitpkg <- firstleveldep[is_github_remote]
 
 
