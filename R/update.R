@@ -144,7 +144,7 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   deps$package  <- pkgstatus_df$package
   deps$remote <- pkgstatus_df$available
   deps$local <- pkgstatus_df$installed
-  deps$source <- remotes_format.remotes(pkgstatus_df$remote)
+  deps$source <- format.remotes(pkgstatus_df$remote)
   deps$diff <-  pkgstatus_df$diff
   deps$repo <-  lapply(pkgstatus_df$remote, function(x) x$username)
   deps[deps$source == 'CRAN','repo'] <- 'https://cran.rstudio.com/'

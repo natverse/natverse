@@ -73,3 +73,19 @@ package_deps_new <- function(package = character(), installed = character(),
 remotes_local_sha  <- function(pkgname) {
   package2pseudoremote(pkgname)$sha %||% NA_character_
 }
+
+format.remotes <- function(x, ...) {
+  vapply(x, format, character(1))
+}
+
+format.cran_remote <- function(x, ...) {
+  "CRAN"
+}
+
+format.github_remote <- function(x, ...) {
+  "GitHub"
+}
+
+format.local_remote <- function(x, ...) {
+  "local"
+}
