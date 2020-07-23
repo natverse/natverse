@@ -56,3 +56,16 @@ package2pseudoremote <- function(name, lib = .libPaths(), repos = getOption("rep
          stop(sprintf("can't convert package %s with RemoteType '%s' to pseudoremote", name, x$RemoteType))
   )
 }
+
+package_deps_new <- function(package = character(), installed = character(),
+                             available = character(), diff = logical(), is_cran = logical(),
+                             remote = list()) {
+
+  res <- structure(
+    data.frame(package = package, installed = installed, available = available, diff = diff, is_cran = is_cran, stringsAsFactors = FALSE),
+    class = c("package_deps", "data.frame")
+  )
+
+  res$remote = structure(remote, class = "remotes")
+  res
+}

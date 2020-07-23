@@ -348,7 +348,7 @@ get_remoteversions <- function (pkgnames, pkgtype = c('CRAN','Github')){
     diff <- installed == available
     diff <- ifelse(!is.na(diff) & diff, 'remotes'%:::%'CURRENT', 'remotes'%:::%'BEHIND')
     diff[is.na(installed)] <- 'remotes'%:::%'UNINSTALLED'
-    githubstatus_df <- remotes_package_deps_new(package, installed, available, diff, is_cran = FALSE, git_remote)
+    githubstatus_df <- package_deps_new(package, installed, available, diff, is_cran = FALSE, git_remote)
 
     return(githubstatus_df)
 
