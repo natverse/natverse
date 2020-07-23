@@ -175,8 +175,8 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   deps$missing <- NULL
 
   #Just trunacate the SHA1 hash
-  deps$remote <- lapply(deps$remote, format_str, width = 12)
-  deps$local <- lapply(deps$local, format_str, width = 12)
+  deps$remote <- lapply(deps$remote, stringr::str_trunc, width = 12)
+  deps$local <- lapply(deps$local, stringr::str_trunc, width = 12)
 
   pckglist = character(length = 0)
 
