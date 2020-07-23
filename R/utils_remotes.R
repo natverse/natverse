@@ -69,3 +69,7 @@ package_deps_new <- function(package = character(), installed = character(),
   res$remote = structure(remote, class = "remotes")
   res
 }
+
+remotes_local_sha  <- function(pkgname) {
+  package2pseudoremote(pkgname)$sha %||% NA_character_
+}
