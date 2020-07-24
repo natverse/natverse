@@ -4,8 +4,11 @@ DependenciesGraphs
 dtupdate
 etc
 github
-io
+mouselightr
 nat
+natmanager
 NeuroAnatomy
+ORCID
+org
 tidyverse
 visNetwork

@@ -1,3 +1,7 @@
+## adapted and modified code from `remotes` package, this code was necessary mainly due to..
+## when loading dependencies from `natverse_deps()`, the remotes package ignores dependencies of non-cran packages
+## (Github) at the second level like `fafbsegdata`.. For e.g. `natverse` -> `fafbseg` -> `fafbsegdata`
+
 pseudoremote <- function(type, ...) {
   structure(list(...), class = c(paste0(type, "_remote"), "remote"))
 }
@@ -94,8 +98,8 @@ format.github_remote <- function(x, ...) {"GitHub"}
 
 format.local_remote <- function(x, ...) {"local"}
 
-#adapted fro, `remotes::parse_one_extra`
-parse_one_extra_remotes <- function(x, ...) {
+#adapted from, `remotes::parse_one_extra`
+construct_gitremotes <- function(x, ...) {
   pieces <- strsplit(x, "::", fixed = TRUE)[[1]]
 
   if ((length(pieces) == 1) && grepl("/", pieces)) {

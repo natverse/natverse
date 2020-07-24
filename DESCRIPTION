@@ -45,7 +45,7 @@ Imports:
     sessioninfo,
     stringr (>= 1.3.0),
     tibble (>= 1.4.2),
-    remotes
+    remotes (>= 2.2.0)
 Suggests:
     DependenciesGraphs,
     fishatlas,
