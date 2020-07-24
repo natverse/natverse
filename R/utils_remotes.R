@@ -110,3 +110,17 @@ parse_one_extra <- function(x, ...) {
   res
 }
 
+
+load_pkg_description <- function(path) {
+
+  path <- normalizePath(path)
+  path_desc <- file.path(path, "DESCRIPTION")
+
+  fields <- colnames(read.dcf(path_desc))
+  desc <-  as.list(read.dcf(path_desc, keep.white = fields)[1, ])
+
+  names(desc) <- tolower(names(desc))
+  desc$path <- path
+
+  desc
+}

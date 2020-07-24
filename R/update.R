@@ -75,7 +75,7 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   github_deps <- setdiff(github_deps, base)
 
   #Now check the versions for these refined dependencies alone..
-  refined_pkgs <- lapply(suppressWarnings(find.package(github_deps, ...)), remotes_load_pkg_description)
+  refined_pkgs <- lapply(suppressWarnings(find.package(github_deps, ...)), load_pkg_description)
 
   #The following packages don't have local description files (which means not installed locally, could
   #be packages from either `CRAN` or `GitHub`)
@@ -362,7 +362,7 @@ local_remotes <- function(pkgname) {
     expr = {
             pkgdir <- find.package(pkgname)
 
-            pkg <- remotes_load_pkg_description(pkgdir)
+            pkg <- load_pkg_description(pkgdir)
             #For github packages..
             remotetype <- pkg$remotetype
 
