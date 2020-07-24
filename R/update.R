@@ -75,7 +75,7 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   github_deps <- setdiff(github_deps, base)
 
   #Now check the versions for these refined dependencies alone..
-  refined_pkgs <- lapply(suppressWarnings(find.package(github_deps, ...)), load_pkg_description)
+  refined_pkgs <- lapply(suppressWarnings(find.package(github_deps, ...)), load_pkg_description_remotes)
 
   #The following packages don't have local description files (which means not installed locally, could
   #be packages from either `CRAN` or `GitHub`)
@@ -324,10 +324,10 @@ get_remoteversions <- function (pkgnames, pkgtype = c('CRAN','Github')){
   if (pkgtype == 'CRAN'){
     cran_remt <- structure(lapply(pkgnames, package2pseudoremote, repos = getOption("repos"),
                                   type=getOption("pkgType")), class = "remotes")
-    inst_ver <- vapply(pkgnames, remotes_local_sha, character(1))
+    inst_ver <- vapply(pkgnames, local_sha_remotes, character(1))
     cran_ver <- vapply(cran_remt, function(x) remotes::remote_sha(x), character(1))
     is_cran_remote <- vapply(cran_remt, inherits, logical(1), "cran_remote")
-    diff <- remotes_cran_compare_versions(inst_ver, cran_ver, is_cran_remote)
+    diff <- compare_versions_remotes(inst_ver, cran_ver, is_cran_remote)
     cranstatus_df <- structure(data.frame(package = pkgnames,installed = inst_ver,
                                           available = cran_ver,diff = diff,
                                           is_cran = is_cran_remote,
@@ -339,16 +339,16 @@ get_remoteversions <- function (pkgnames, pkgtype = c('CRAN','Github')){
 
   } else if (pkgtype == 'Github'){
 
-    git_remote <- lapply(pkgnames, parse_one_extra)
+    git_remote <- lapply(pkgnames, parse_one_extra_remotes)
 
     package <- vapply(git_remote, function(x) remotes::remote_package_name(x), character(1), USE.NAMES = FALSE)
-    installed <- vapply(package, function(x) remotes_local_sha(x), character(1), USE.NAMES = FALSE)
+    installed <- vapply(package, function(x) local_sha_remotes(x), character(1), USE.NAMES = FALSE)
     available <- vapply(git_remote, function(x) remotes::remote_sha(x), character(1), USE.NAMES = FALSE)
 
     diff <- installed == available
     diff <- ifelse(!is.na(diff) & diff, remotes_current, remotes_behind)
     diff[is.na(installed)] <- remotes_uninstalled
-    githubstatus_df <- package_deps_new(package, installed, available, diff, is_cran = FALSE, git_remote)
+    githubstatus_df <- package_deps_new_remotes(package, installed, available, diff, is_cran = FALSE, git_remote)
 
     return(githubstatus_df)
 
@@ -362,7 +362,7 @@ local_remotes <- function(pkgname) {
     expr = {
             pkgdir <- find.package(pkgname)
 
-            pkg <- load_pkg_description(pkgdir)
+            pkg <- load_pkg_description_remotes(pkgdir)
             #For github packages..
             remotetype <- pkg$remotetype
 

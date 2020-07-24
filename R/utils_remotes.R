@@ -67,7 +67,8 @@ package2pseudoremote <- function(name, lib = .libPaths(), repos = getOption("rep
   )
 }
 
-package_deps_new <- function(package = character(), installed = character(),
+#adapted from `remotes::package_deps_new`
+package_deps_new_remotes <- function(package = character(), installed = character(),
                              available = character(), diff = logical(), is_cran = logical(),
                              remote = list()) {
 
@@ -80,28 +81,21 @@ package_deps_new <- function(package = character(), installed = character(),
   res
 }
 
-remotes_local_sha  <- function(pkgname) {
+#adapted from `remotes::local_sha`
+local_sha_remotes  <- function(pkgname) {
   package2pseudoremote(pkgname)$sha %||% NA_character_
 }
 
-format.remotes <- function(x, ...) {
-  vapply(x, format, character(1))
-}
+format.remotes <- function(x, ...) { vapply(x, format, character(1)) }
 
-format.cran_remote <- function(x, ...) {
-  "CRAN"
-}
+format.cran_remote <- function(x, ...) {"CRAN"}
 
-format.github_remote <- function(x, ...) {
-  "GitHub"
-}
+format.github_remote <- function(x, ...) {"GitHub"}
 
-format.local_remote <- function(x, ...) {
-  "local"
-}
+format.local_remote <- function(x, ...) {"local"}
 
-
-parse_one_extra <- function(x, ...) {
+#adapted fro, `remotes::parse_one_extra`
+parse_one_extra_remotes <- function(x, ...) {
   pieces <- strsplit(x, "::", fixed = TRUE)[[1]]
 
   if ((length(pieces) == 1) && grepl("/", pieces)) {
@@ -120,8 +114,8 @@ parse_one_extra <- function(x, ...) {
   res
 }
 
-
-load_pkg_description <- function(path) {
+#adapted from `remotes::load_pkg_description`..
+load_pkg_description_remotes <- function(path) {
 
   path <- normalizePath(path)
   path_desc <- file.path(path, "DESCRIPTION")
@@ -137,7 +131,7 @@ load_pkg_description <- function(path) {
 
 
 #adapted from `remotes::compare_versions`..
-remotes_cran_compare_versions <- function(inst, remote, is_cran) {
+compare_versions_remotes <- function(inst, remote, is_cran) {
   #first check if the lengths of all args are equal..
   stopifnot(length(inst) == length(remote) && length(inst) == length(is_cran))
 
