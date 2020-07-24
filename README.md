@@ -6,9 +6,12 @@
 <!-- badges: start -->
 
 [![natverse](https://img.shields.io/badge/natverse-Part%20of%20the%20natverse-a241b6)](https://natverse.github.io)
+[![GitHub](https://img.shields.io/github/v/release/natverse/natverse)](https://github.com/natverse/natverse/releases/)
 [![Docs](https://img.shields.io/badge/docs-100%25-brightgreen.svg)](https://natverse.github.io/natverse/reference/)
 [![Travis build
 status](https://travis-ci.org/natverse/natverse.svg?branch=master)](https://travis-ci.org/natverse/natverse)
+[![Coveralls test
+coverage](https://coveralls.io/repos/github/natverse/natverse/badge.svg)](https://coveralls.io/r/natverse/natverse?branch=master)
 <!-- badges: end -->
 
 The natverse package is a wrapper for all of the commonly used
@@ -39,8 +42,10 @@ library(natverse)
 #> Loading required package: elmr
 #> Loading required package: catmaid
 #> Loading required package: httr
+#> Warning: package 'httr' was built under R version 3.6.2
 #> Loading required package: nat
 #> Loading required package: rgl
+#> Warning: package 'rgl' was built under R version 3.6.2
 #> Registered S3 method overwritten by 'nat':
 #>   method             from
 #>   as.mesh3d.ashape3d rgl
@@ -71,7 +76,7 @@ name as another package.
 
 ``` r
 natverse_conflicts()
-#> ── Conflicts ──────────────────────────────────── natverse_conflicts() ──
+#> ── Conflicts ─────────────────────────────────────────────────────────────── natverse_conflicts() ──
 #> x nat::intersect() masks base::intersect()
 #> x nat::setdiff()   masks base::setdiff()
 #> x nat::union()     masks base::union()
@@ -90,38 +95,35 @@ dependencies like so:
 ``` r
 natverse_update()
 #> 
-#> package: isoband was not found
-#> 
 #> The following packages are either locally installed or information about them is missing!
 #> 
-#>   fafbsegdata, neuprintr
+#>   blob, formattable, import, mockr, nycflights13, pingr, fafbsegdata, reticulate, nat
 #> 
 #> Please install them manually from their appropriate source locations
-#> 
-#> The following natverse dependencies are missing!
-#> 
-#>   isoband
-#> 
-#> We recommend installing them by running:
-#> natverse_update(update=TRUE)
 #> 
 #> The following natverse dependencies are out-of-date, see details below:
 #> 
 #> We recommend updating them by running:
 #> natverse_update(update=TRUE)
 #> 
-#> package      remote         local          source   repo                        status      
-#> -----------  -------------  -------------  -------  --------------------------  -------     
-#> covr         3.5.0          3.4.0          CRAN     https://cran.rstudio.com/   x           
-#> dplyr        0.8.5          0.8.4          CRAN     https://cran.rstudio.com/   x           
-#> fafbseg      265230190...   47c8b459b...   GitHub   jefferis                    x           
-#> ggplot2      3.3.0          3.2.1          CRAN     https://cran.rstudio.com/   x           
-#> isoband      0.2.0          NA             CRAN     https://cran.rstudio.com/   ❓      
-#> Morpho       2.8            2.7            CRAN     https://cran.rstudio.com/   x           
-#> plyr         1.8.6          1.8.5          CRAN     https://cran.rstudio.com/   x           
-#> reticulate   1.14           1.13           CRAN     https://cran.rstudio.com/   x           
-#> vctrs        0.2.4          0.2.3          CRAN     https://cran.rstudio.com/   x           
-#> xml2         1.2.5          1.2.2          CRAN     https://cran.rstudio.com/   x
+#> package         remote         local          source   repo                        status 
+#> --------------  -------------  -------------  -------  --------------------------  -------
+#> bit64           0.9-7.1        0.9-7          CRAN     https://cran.rstudio.com/   x      
+#> data.table      1.13.0         1.12.8         CRAN     https://cran.rstudio.com/   x      
+#> elmr            deb0e27df...   7a2be4537...   GitHub   natverse                    x      
+#> ff              2.2-14.2       2.2-14         CRAN     https://cran.rstudio.com/   x      
+#> flycircuit      1b7b48e29...   cc4594f47...   GitHub   natverse                    x      
+#> git2r           0.27.1         0.26.1         CRAN     https://cran.rstudio.com/   x      
+#> insectbrainr    6331b4df6...   8fef94a05...   GitHub   natverse                    x      
+#> mouselightr     9c2ce1c31...   8e26b7702...   GitHub   natverse                    x      
+#> nat.flybrains   28ff33213...   36c622a15...   GitHub   natverse                    x      
+#> nat.jrcbrains   85ed4a791...   44c95667e...   GitHub   natverse                    x      
+#> neuprintr       7403d3ce2...   8ab03b744...   GitHub   natverse                    x      
+#> RCurl           1.98-1.2       1.98-1.1       CRAN     https://cran.rstudio.com/   x      
+#> tibble          b4eec19dd...   3f4e5dfae...   GitHub   tidyverse                   x      
+#> tidyr           1.1.0          1.0.3          CRAN     https://cran.rstudio.com/   x      
+#> xfun            0.16           0.15           CRAN     https://cran.rstudio.com/   x      
+#> XML             NA             3.99-0.3       CRAN     https://cran.rstudio.com/   x
 ```
 
 You can then update like so:
