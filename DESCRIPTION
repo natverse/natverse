@@ -66,6 +66,7 @@ Suggests:
     spelling,
     testthat (>= 2.1.0),
     visNetwork (>= 0.2.1),
+    covr
 Remotes: 
     datastorm-open/DependenciesGraphs,
     natverse/drvid,
