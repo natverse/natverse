@@ -2,9 +2,19 @@ pseudoremote <- function(type, ...) {
   structure(list(...), class = c(paste0(type, "_remote"), "remote"))
 }
 
-
-
 `%||%` <- function (a, b) if (!is.null(a)) a else b
+
+## -2 = not installed, but available on CRAN
+## -1 = installed, but out of date
+##  0 = installed, most recent version
+##  1 = installed, version ahead of CRAN
+##  2 = package not on CRAN
+
+remotes_uninstalled <- -2L
+remotes_behind <- -1L
+remotes_current <- 0L
+remotes_ahead <- 1L
+remotes_unavailable <- 2L
 
 #adapted from the remotes package to support only cran, github, local installations..
 
@@ -123,4 +133,37 @@ load_pkg_description <- function(path) {
   desc$path <- path
 
   desc
+}
+
+
+
+compare_versions <- function(inst, remote, is_cran) {
+  stopifnot(length(inst) == length(remote) && length(inst) == length(is_cran))
+
+  compare_var <- function(i, c, cran) {
+    if (!cran) {
+      if (identical(i, c)) {
+        return(remotes_current)
+      } else {
+        return(remotes_behind)
+      }
+    }
+    if (is.na(c)) return(remotes_unavailable)           # not on CRAN
+    if (is.na(i)) return(remotes_uninstalled)           # not installed, but on CRAN
+
+    i <- package_version(i)
+    c <- package_version(c)
+
+    if (i < c) {
+      remotes_behind                               # out of date
+    } else if (i > c) {
+      remotes_ahead                                # ahead of CRAN
+    } else {
+      remotes_current                              # most recent CRAN version
+    }
+  }
+
+  vapply(seq_along(inst),
+         function(i) compare_var(inst[[i]], remote[[i]], is_cran[[i]]),
+         integer(1))
 }

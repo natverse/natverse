@@ -1,11 +1,11 @@
-`%:::%` = function(pkg, fun) get(fun, envir = asNamespace(pkg),
-                                 inherits = FALSE)
+#`%:::%` = function(pkg, fun) get(fun, envir = asNamespace(pkg),
+#                                 inherits = FALSE)
 
 #These function redefs are added as per the strategy by https://stat.ethz.ch/pipermail/r-devel/2013-August/067210.html
 #They will need to removed once the remotes module fixes the defect of considering second order dependencies from
 #github packages.
 
-remotes_compare_versions <- 'remotes'%:::%'compare_versions'
+#remotes_compare_versions <- 'remotes'%:::%'compare_versions'
 #remotes_format.remotes <- 'remotes'%:::%'format.remotes'
 #remotes_format_str <- 'remotes'%:::%'format_str'
 #remotes_load_pkg_description <- 'remotes'%:::%'load_pkg_description'
