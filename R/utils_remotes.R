@@ -136,8 +136,9 @@ load_pkg_description <- function(path) {
 }
 
 
-
-compare_versions <- function(inst, remote, is_cran) {
+#adapted from `remotes::compare_versions`..
+remotes_cran_compare_versions <- function(inst, remote, is_cran) {
+  #first check if the lengths of all args are equal..
   stopifnot(length(inst) == length(remote) && length(inst) == length(is_cran))
 
   compare_var <- function(i, c, cran) {
@@ -151,18 +152,10 @@ compare_versions <- function(inst, remote, is_cran) {
     if (is.na(c)) return(remotes_unavailable)           # not on CRAN
     if (is.na(i)) return(remotes_uninstalled)           # not installed, but on CRAN
 
-    i <- package_version(i)
-    c <- package_version(c)
-
-    if (i < c) {
-      remotes_behind                               # out of date
-    } else if (i > c) {
-      remotes_ahead                                # ahead of CRAN
-    } else {
-      remotes_current                              # most recent CRAN version
-    }
+    utils::compareVersion(i, c)
   }
 
+  #apply along the sequence and just return back..
   vapply(seq_along(inst),
          function(i) compare_var(inst[[i]], remote[[i]], is_cran[[i]]),
          integer(1))

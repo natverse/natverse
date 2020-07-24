@@ -327,7 +327,7 @@ get_remoteversions <- function (pkgnames, pkgtype = c('CRAN','Github')){
     inst_ver <- vapply(pkgnames, remotes_local_sha, character(1))
     cran_ver <- vapply(cran_remt, function(x) remotes::remote_sha(x), character(1))
     is_cran_remote <- vapply(cran_remt, inherits, logical(1), "cran_remote")
-    diff <- compare_versions(inst_ver, cran_ver, is_cran_remote)
+    diff <- remotes_cran_compare_versions(inst_ver, cran_ver, is_cran_remote)
     cranstatus_df <- structure(data.frame(package = pkgnames,installed = inst_ver,
                                           available = cran_ver,diff = diff,
                                           is_cran = is_cran_remote,
