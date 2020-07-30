@@ -1,7 +1,7 @@
 Type: Package
 Package: natverse
 Title: Install all NeuroAnatomy Toolbox packages
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: 
     c(person(given = "Gregory",
              family = "Jefferis",
@@ -45,7 +45,7 @@ Imports:
     sessioninfo,
     stringr (>= 1.3.0),
     tibble (>= 1.4.2),
-    remotes
+    remotes (>= 2.2.0)
 Suggests:
     DependenciesGraphs,
     fishatlas,
@@ -66,11 +66,12 @@ Suggests:
     spelling,
     testthat (>= 2.1.0),
     visNetwork (>= 0.2.1),
+    covr
 Remotes: 
     datastorm-open/DependenciesGraphs,
     natverse/drvid,
     natverse/elmr,
-    jefferis/fafbseg,
+    natverse/fafbseg,
     natverse/nat,
     natverse/neuprintr,
     natverse/fishatlas,

@@ -21,3 +21,5 @@ jobs:
     - stage: test
 before_install:
   - echo 'options(Ncpus = 2)' >> ~/.Rprofile
+after_success:
+  - Rscript -e 'covr::coveralls()'
