@@ -64,6 +64,7 @@ Suggests:
     knitr,
     png,
     spelling,
+    mockery,
     testthat (>= 2.1.0),
     visNetwork (>= 0.2.1),
     covr
