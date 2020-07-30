@@ -15,21 +15,29 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
+
 <!-- jquery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script>
+
+<!-- bootstrap-toc -->
+<link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script>
 
 <!-- Font Awesome icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous" />
 
 <!-- clipboard.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script>
 
-<!-- sticky kit -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script>
+<!-- headroom.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script>
 
 <!-- pkgdown -->
 <link href="../pkgdown.css" rel="stylesheet">
@@ -37,16 +45,14 @@
 
 
 
+
 <meta property="og:title" content="Check status of natverse packages and (optionally) update if necessary — natverse_update" />
-
-<meta property="og:description" content="This will check to see if all natverse packages (and optionally (if
+<meta property="og:description" content="This will check to see if all natverse packages (and by default, when
 recursive = TRUE), their dependencies ) are up-to-date, and will
-provide the command to perform the installation in one go! Adapted and
-modified from the following sources : update function in 'tidyverse'
-package, github_update function in 'dtupdate' package" />
+update them (optionally, if update = TRUE) if they are missing or are
+not up-to-date!" />
+<meta property="og:image" content="/logo.svg" />
 
-<meta property="og:image" content="/logo.png" />
-<meta name="twitter:card" content="summary" />
 
 
 
@@ -60,9 +66,10 @@ package, github_update function in 'dtupdate' package" />
 <![endif]-->
 
 
+
   </head>
 
-  <body>
+  <body data-spy="scroll" data-target="#toc">
     <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -76,7 +83,7 @@ package, github_update function in 'dtupdate' package" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">natverse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
       </span>
     </div>
 
@@ -98,7 +105,6 @@ package, github_update function in 'dtupdate' package" />
   <a href="../SUPPORT.html">Help</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://natverse.github.io">natverse</a>
@@ -116,6 +122,7 @@ package, github_update function in 'dtupdate' package" />
 </div><!--/.navbar -->
 
       
+
       </header>
 
 <div class="row">
@@ -127,83 +134,71 @@ package, github_update function in 'dtupdate' package" />
     </div>
 
     <div class="ref-description">
-    
-    <p>This will check to see if all natverse packages (and optionally (if
+    <p>This will check to see if all natverse packages (and by default, when
 <code>recursive = TRUE</code>), their dependencies ) are up-to-date, and will
-provide the command to perform the installation in one go! Adapted and
-modified from the following sources : <code>update</code> function in 'tidyverse'
-package, <code>github_update</code> function in 'dtupdate' package</p>
-    
+update them (optionally, if <code>update = TRUE</code>) if they are missing or are
+not up-to-date!</p>
     </div>
 
-    <pre class="usage"><span class='fu'>natverse_update</span>(<span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>source</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='st'>"CRAN"</span>, <span class='st'>"GITHUB"</span>))</pre>
-    
+    <pre class="usage"><span class='fu'>natverse_update</span>(
+  <span class='kw'>update</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
+  <span class='kw'>install_missing</span> <span class='kw'>=</span> <span class='no'>update</span>,
+  <span class='kw'>recursive</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>upgrade</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"default"</span>, <span class='st'>"ask"</span>, <span class='st'>"always"</span>, <span class='st'>"never"</span>),
+  <span class='no'>...</span>
+)</pre>
+
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>update</th>
+      <td><p>If <code>TRUE</code>, will actually update the packages rather than
+just reporting the status of dependent packages.</p></td>
+    </tr>
+    <tr>
+      <th>install_missing</th>
+      <td><p>If <code>TRUE</code>, will install any missing packages.</p></td>
+    </tr>
     <tr>
       <th>recursive</th>
       <td><p>If <code>TRUE</code>, will also check all dependencies of natverse
 packages.</p></td>
     </tr>
     <tr>
-      <th>source</th>
-      <td><p>set the source of updates to 'CRAN' or 'GITHUB' natverse
-packages. The default checks both.</p></td>
+      <th>upgrade</th>
+      <td><p>Whether or not to ask you about updating the dependencies of
+natverse packages. The 'default' value will ask in interactive session. Set
+to 'always' to install all dependencies without prompts. See
+<code><a href='https://remotes.r-lib.org/reference/update_packages.html'>update_packages</a></code> for further details.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>extra arguments to pass to <code><a href='https://remotes.r-lib.org/reference/update_packages.html'>update_packages</a></code>,
+<code><a href='https://remotes.r-lib.org/reference/install_cran.html'>install_cran</a></code>, <code><a href='https://remotes.r-lib.org/reference/install_github.html'>install_github</a></code>.</p></td>
     </tr>
     </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>tibble</code> detailing dependencies and their status.</p>
-    
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>natverse_update</span>()</div><div class='output co'>#&gt; <span style='color: #BB0000;'>
-#&gt; The following natverse dependencies are missing!
-#&gt; </span><span>
-#&gt;   fishatlas, insectbrainr
-#&gt; 
-#&gt; We recommend installing them by running:
-#&gt; remotes::update_packages("natverse")
-#&gt; </span><span style='color: #BB0000;'>
-#&gt; The following natverse dependencies from CRAN GITHUB are out-of-date, see details below:</span><span>
-#&gt; 
-#&gt; package        remote       local        source                                   status            
-#&gt; -------------  -----------  -----------  ---------------------------------------  ------------      
-#&gt; cli            1.1.0        1.1.0        CRAN (R 3.6.0)                           </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; crayon         1.3.4        1.3.4        CRAN (R 3.6.0)                           </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; dplyr          0.8.3        0.8.3        CRAN (R 3.6.0)                           </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; fafbseg        NA           0.6.4        local                                    ❓            
-#&gt; magrittr       1.5          1.5          CRAN (R 3.6.0)                           </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; pbapply        1.4.2        1.4.1        CRAN (R 3.6.0)                           </span><span style='color: #BB0000;'>✖</span><span> 
-#&gt; purrr          0.3.2        0.3.2        CRAN (R 3.6.0)                           </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; remotes        2.1.0        2.1.0        CRAN (R 3.6.0)                           </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; sessioninfo    1.1.1        1.1.1        CRAN (R 3.6.0)                           </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; stringr        1.4.0        1.4.0        CRAN (R 3.6.0)                           </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; tibble         2.1.3        2.1.3        CRAN (R 3.6.0)                           </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; drvid          0.3.0        0.3.0        Github (jefferis/drvid@cdd2a48)          </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; elmr           0.5.6        0.5.6        Github (jefferis/elmr@5bec417)           </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; nat            1.9.1.9000   1.9.1.9000   Github (jefferis/nat@3ab1eda)            </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; neuprintr      0.2.0        0.2.0        Github (jefferislab/neuprintr@ec18f21)   </span><span style='color: #00BB00;'>✔</span><span> 
-#&gt; fishatlas      NA           NA           NA                                       ❓            
-#&gt; insectbrainr   NA           NA           NA                                       ❓            
-#&gt; 
-#&gt; Start a clean R session then run:
-#&gt; install.packages("pbapply")</div></span></pre>
-  </div>
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-      
-      <li><a href="#examples">Examples</a></li>
-    </ul>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='co'># check status of natverse and its dependencies</span>
+<span class='fu'>natverse_update</span>()
 
+<span class='co'># ... actually install any updates</span>
+<span class='fu'>natverse_update</span>(<span class='kw'>update</span><span class='kw'>=</span><span class='fl'>TRUE</span>)
+
+<span class='co'># update any indirect dependencies without requesting your confirmation</span>
+<span class='fu'>natverse_update</span>(<span class='kw'>update</span><span class='kw'>=</span><span class='fl'>TRUE</span>, <span class='kw'>upgrade</span><span class='kw'>=</span><span class='st'>'always'</span>)
+}</div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
+
 
       <footer>
       <div class="copyright">
@@ -211,13 +206,16 @@ packages. The default checks both.</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
 </div>
+
       </footer>
    </div>
 
   
 
+
   </body>
 </html>
+
 
