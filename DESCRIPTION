@@ -1,7 +1,7 @@
 Type: Package
 Package: natverse
 Title: Install all NeuroAnatomy Toolbox packages
-Version: 0.2.2
+Version: 0.2.3
 Authors@R: 
     c(person(given = "Gregory",
              family = "Jefferis",
@@ -32,6 +32,7 @@ BugReports: https://github.com/natverse/natverse/issues
 Depends: 
     elmr,
     nat,
+    neuprintr,
     R (>= 3.1)
 Imports:
     neuprintr,
