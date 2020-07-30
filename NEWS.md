@@ -1,3 +1,7 @@
+# natverse 0.2.2
+
+* fix broken install due to changes in remotes 2.2.0 (#19, #20)
+
 # natverse 0.2.1
 
 * add mouselightr package (suggested)
