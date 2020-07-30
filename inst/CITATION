@@ -9,7 +9,7 @@ citHeader(
   "to see if there is a specific citation to use for a given package",
   "in addition to the general natverse paper.")
 structure(list(structure(list(author = structure(list(list(given = c("Alexander", 
-"S."), family = "Bates", role = NULL, email = NULL, comment = NULL), 
+"Shakeel"), family = "Bates", role = NULL, email = NULL, comment = NULL), 
     list(given = c("James", "D."), family = "Manton", role = NULL, 
         email = NULL, comment = NULL), list(given = c("Sridhar", 
     "R."), family = "Jagannathan", role = NULL, email = NULL, 
@@ -19,9 +19,9 @@ structure(list(structure(list(author = structure(list(list(given = c("Alexander"
     list(given = "Torsten", family = "Rohlfing", role = NULL, 
         email = NULL, comment = NULL), list(given = c("Gregory", 
     "S.", "X.", "E."), family = "Jefferis", role = NULL, email = NULL, 
-        comment = NULL)), class = "person"), title = "The natverse: a versatile computational toolbox to combine and analyse neuroanatomical data", 
-    `elocation-id` = "006353", year = "2019", doi = "10.1101/006353", 
-    publisher = "Cold Spring Harbor Laboratory", url = "https://www.biorxiv.org/content/early/2019/11/07/006353", 
-    journal = "bioRxiv"), bibtype = "Article", key = "Bates006353", dateobj = structure(1546300800, class = c("POSIXct", 
-"POSIXt"), tzone = "", day.mon = 0L))), class = c("BibEntry", 
+        comment = NULL)), class = "person"), journal = "Elife", 
+    month = "Apr", title = "The natverse, a versatile toolbox for combining and analysing neuroanatomical data", 
+    volume = "9", year = "2020", doi = "10.7554/eLife.53350", 
+    url = "https://doi.org/10.7554/eLife.53350"), bibtype = "Article", key = "Bates:2020aa", dateobj = structure(1585699200, class = c("POSIXct", 
+"POSIXt"), tzone = "UTC", day.mon = 1L))), class = c("BibEntry", 
 "bibentry"))
