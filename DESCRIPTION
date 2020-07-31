@@ -47,7 +47,6 @@ Imports:
     tibble (>= 1.4.2),
     remotes (>= 2.2.0)
 Suggests:
-    DependenciesGraphs,
     fishatlas,
     fafbseg,
     flycircuit,
@@ -66,10 +65,8 @@ Suggests:
     spelling,
     mockery,
     testthat (>= 2.1.0),
-    visNetwork (>= 0.2.1),
     covr
 Remotes: 
-    datastorm-open/DependenciesGraphs,
     natverse/drvid,
     natverse/elmr,
     natverse/fafbseg,

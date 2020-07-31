@@ -21,6 +21,6 @@ jobs:
     - stage: test
 before_install:
   - echo 'options(Ncpus = 2)' >> ~/.Rprofile
-  - Rscript -e 'install.packages("XML", repos = "http://www.omegahat.net/R")'
+
 after_success:
   - Rscript -e 'covr::coveralls()'
