@@ -1,3 +1,7 @@
+# natverse 0.2.4
+
+* update citation file to mention eLife only
+
 # natverse 0.2.3
 
 * move neuprintr to depends given increased usage for hemibrain dataset.
