@@ -41,7 +41,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">natverse</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.4</span>
       </span>
     </div>
 
@@ -91,21 +91,23 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>The natverse package is a wrapper for all of the commonly used NeuroAnatomy Toolbox packages. This is convenient both for package installation and for loading/attaching these packages without many calls to <code>library()</code>.</p>
+<p>The natverse package is a wrapper for all of the commonly used NeuroAnatomy Toolbox packages. This is convenient both for package installation and for loading/attaching these packages without many calls to <code><a href="https://rdrr.io/r/base/library.html">library()</a></code>.</p>
 <p>See <a href="http://natverse.org" class="uri">http://natverse.org</a> for more details.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>The recommended approach to install the full natverse is to use a helper package natmanager, which is available on CRAN. You can therefore do:</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span>(<span class="st">"natmanager"</span>)
-<span class="kw pkg">natmanager</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/natmanager/man/install.html">install</a></span>(<span class="st">"natverse"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"natmanager"</span><span class="op">)</span>
+<span class="fu">natmanager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/natmanager/man/install.html">install</a></span><span class="op">(</span><span class="st">"natverse"</span><span class="op">)</span></code></pre></div>
 <p>See <a href="http://natverse.org/install" class="uri">http://natverse.org/install</a> for more details.</p>
 </div>
 <div id="use" class="section level2">
 <h2 class="hasAnchor">
 <a href="#use" class="anchor"></a>Use</h2>
 <p>Once installed, you can load the <code>natverse</code> package:</p>
-<div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">natverse</span>)
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/natverse/natverse">natverse</a></span><span class="op">)</span>
 <span class="co">#&gt; Loading required package: elmr</span>
 <span class="co">#&gt; Loading required package: catmaid</span>
 <span class="co">#&gt; Loading required package: httr</span>
@@ -128,7 +130,7 @@
 <span class="co">#&gt; Loading required package: nat.templatebrains</span>
 <span class="co">#&gt; Loading required package: nat.nblast</span>
 <span class="co"># example 3D plot of some neurons</span>
-<span class="fu"><a href="https://rdrr.io/r/base/plot.html">plot</a></span>(<span class="no">kcs20</span>, <span class="kw">col</span><span class="kw">=</span><span class="no">type</span>)</pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">kcs20</span>, col<span class="op">=</span><span class="va">type</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-example-1.png" width="100%"></p>
 </div>
 <div id="installation-details" class="section level2">
@@ -138,19 +140,21 @@
 <h3 class="hasAnchor">
 <a href="#conflicts-and-dependencies" class="anchor"></a>Conflicts and Dependencies</h3>
 <p>The natverse package contains many packages and it is possible that there could be conflicts where functions in the natverse have the same name as another package.</p>
-<div class="sourceCode" id="cb3"><pre class="r"><span class="fu"><a href="reference/natverse_conflicts.html">natverse_conflicts</a></span>()
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/natverse_conflicts.html">natverse_conflicts</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; ── Conflicts ─────────────────────────────────────────────────────────────── natverse_conflicts() ──</span>
 <span class="co">#&gt; x nat::intersect() masks base::intersect()</span>
 <span class="co">#&gt; x nat::setdiff()   masks base::setdiff()</span>
 <span class="co">#&gt; x nat::union()     masks base::union()</span>
-<span class="co">#&gt; x nat::wire3d()    masks rgl::wire3d()</span></pre></div>
+<span class="co">#&gt; x nat::wire3d()    masks rgl::wire3d()</span></code></pre></div>
 <p>You can always choose the correct version by prepending the specific package name e.g. <code><a href="https://rdrr.io/pkg/nat/man/flip.html">nat::flip()</a></code> will select the nat version rather than any other.</p>
 </div>
 <div id="updates" class="section level3">
 <h3 class="hasAnchor">
 <a href="#updates" class="anchor"></a>Updates</h3>
 <p>Once installed, you check the status of all natverse packages and their dependencies like so:</p>
-<div class="sourceCode" id="cb4"><pre class="r"><span class="fu"><a href="reference/natverse_update.html">natverse_update</a></span>()
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/natverse_update.html">natverse_update</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; The following packages are either locally installed or information about them is missing!</span>
 <span class="co">#&gt; </span>
@@ -180,13 +184,16 @@
 <span class="co">#&gt; tibble          b4eec19dd...   3f4e5dfae...   GitHub   tidyverse                   x      </span>
 <span class="co">#&gt; tidyr           1.1.0          1.0.3          CRAN     https://cran.rstudio.com/   x      </span>
 <span class="co">#&gt; xfun            0.16           0.15           CRAN     https://cran.rstudio.com/   x      </span>
-<span class="co">#&gt; XML             NA             3.99-0.3       CRAN     https://cran.rstudio.com/   x</span></pre></div>
+<span class="co">#&gt; XML             NA             3.99-0.3       CRAN     https://cran.rstudio.com/   x</span></code></pre></div>
 <p>You can then update like so:</p>
-<div class="sourceCode" id="cb5"><pre class="r"><span class="fu"><a href="reference/natverse_update.html">natverse_update</a></span>(<span class="kw">update</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/natverse_update.html">natverse_update</a></span><span class="op">(</span>update <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p>However, if you are in a hurry and want to save time from the questions use like below:</p>
-<div class="sourceCode" id="cb6"><pre class="r"><span class="fu"><a href="reference/natverse_update.html">natverse_update</a></span>(<span class="kw">update</span><span class="kw">=</span><span class="fl">TRUE</span>, <span class="kw">upgrade</span> <span class="kw">=</span> <span class="st">'always'</span>)</pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="reference/natverse_update.html">natverse_update</a></span><span class="op">(</span>update<span class="op">=</span><span class="cn">TRUE</span>, upgrade <span class="op">=</span> <span class="st">'always'</span><span class="op">)</span></code></pre></div>
 <p>If want to upgrade the natverse package itself:</p>
-<div class="sourceCode" id="cb7"><pre class="r"><span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/update_packages.html">update_packages</a></span>(<span class="st">'natverse'</span>)</pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/update_packages.html">update_packages</a></span><span class="op">(</span><span class="st">'natverse'</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -243,7 +250,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
