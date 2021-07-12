@@ -3,7 +3,7 @@
 #' dependencies.
 #'
 #' @keywords internal
-#' @import nat elmr
+#' @import nat elmr neuprintr
 "_PACKAGE"
 
 # The following block is used by usethis to automatically manage

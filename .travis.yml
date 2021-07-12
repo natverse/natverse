@@ -2,11 +2,15 @@
 
 language: R
 sudo: false
+r:
+  - oldrel
+  - release
 cache: packages
 addons:
   apt:
     packages:
     - libglu1-mesa-dev
+    - libhdf5-dev
 env:
   global:
     - RGL_USE_NULL=TRUE
@@ -17,3 +21,6 @@ jobs:
     - stage: test
 before_install:
   - echo 'options(Ncpus = 2)' >> ~/.Rprofile
+
+after_success:
+  - Rscript -e 'covr::coveralls()'

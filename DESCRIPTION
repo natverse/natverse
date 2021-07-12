@@ -1,7 +1,7 @@
 Type: Package
 Package: natverse
 Title: Install all NeuroAnatomy Toolbox packages
-Version: 0.2.1
+Version: 0.2.4
 Authors@R: 
     c(person(given = "Gregory",
              family = "Jefferis",
@@ -25,54 +25,56 @@ Description: Provides functionality for installing and updating
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 Language: en-GB
 URL: https://github.com/natverse/natverse, https://natverse.github.io/nat/
 BugReports: https://github.com/natverse/natverse/issues
 Depends: 
     elmr,
     nat,
+    neuprintr,
     R (>= 3.1)
 Imports:
-    neuprintr,
     cli (>= 1.0.0),
     crayon (>= 1.3.4),
     dplyr,
     drvid,
-    fafbseg,
     magrittr (>= 1.5),
     pbapply,
     purrr (>= 0.2.4),
     sessioninfo,
     stringr (>= 1.3.0),
     tibble (>= 1.4.2),
-    remotes
+    remotes (>= 2.2.0)
 Suggests:
-    DependenciesGraphs,
     fishatlas,
+    fafbseg,
+    flycircuit,
+    insectbrainr,
     mouselightr,
+    nat.jrcbrains,
     neuromorphr,
+    alphashape3d,
+    Morpho,
+    rJava,
+    Rvcg,
     ggplot2,
     here,
-    insectbrainr,
     knitr,
     png,
     spelling,
+    mockery,
     testthat (>= 2.1.0),
-    visNetwork (>= 0.2.1),
-    alphashape3d,
-    Morpho,
-    Rvcg
+    covr
 Remotes: 
-    datastorm-open/DependenciesGraphs,
     natverse/drvid,
-    jefferis/elmr,
-    jefferis/fafbseg,
+    natverse/elmr,
+    natverse/fafbseg,
     natverse/nat,
     natverse/neuprintr,
     natverse/fishatlas,
+    natverse/flycircuit,
     natverse/insectbrainr,
     natverse/mouselightr,
-    natverse/neuromorphr
-
-
+    natverse/neuromorphr,
+    natverse/nat.jrcbrains
