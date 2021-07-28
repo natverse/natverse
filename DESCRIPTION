@@ -13,7 +13,7 @@ Authors@R:
              role = c("aut", "cre"),
              email = "j.sridharrajan@gmail.com",
              comment = c(ORCID = "0000-0002-2078-1145")),
-      person(given = "Alexander”,
+      person(given = "Alexander",
              family = "Bates",
              role = c("ctb"),
              email = "abates@mrc-lmb.cam.ac.uk",

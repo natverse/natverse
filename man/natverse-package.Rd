@@ -35,7 +35,7 @@ Authors:
 
 Other contributors:
 \itemize{
-  \item Alex Bates \email{abates@mrc-lmb.cam.ac.uk} (\href{https://orcid.org/0000-0002-1195-0445}{ORCID}) [contributor]
+  \item Alexander Bates \email{abates@mrc-lmb.cam.ac.uk} (\href{https://orcid.org/0000-0002-1195-0445}{ORCID}) [contributor]
 }
 
 }
