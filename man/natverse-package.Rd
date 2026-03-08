@@ -6,10 +6,9 @@
 \alias{natverse-package}
 \title{natverse: Install all NeuroAnatomy Toolbox packages}
 \description{
-Provides functionality for installing and updating
-    all nat packages and friends in one go. This includes both CRAN and
-    github only packages. Other functionalities like checking conflicts
-    are also provided. Inspired by tidyverse and dtupdate packages.
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
+Provides functionality for installing and updating all nat packages and friends in one go. This includes both CRAN and github only packages. Other functionalities like checking conflicts are also provided. Inspired by tidyverse and dtupdate packages.
 }
 \details{
 The key function for end users is \code{\link{natverse_update}} which will
