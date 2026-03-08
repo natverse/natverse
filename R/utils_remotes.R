@@ -90,12 +90,20 @@ local_sha_remotes  <- function(pkgname) {
   package2pseudoremote(pkgname)$sha %||% NA_character_
 }
 
+##' @method format remotes
+##' @export
 format.remotes <- function(x, ...) { vapply(x, format, character(1)) }
 
+##' @method format cran_remote
+##' @export
 format.cran_remote <- function(x, ...) {"CRAN"}
 
+##' @method format github_remote
+##' @export
 format.github_remote <- function(x, ...) {"GitHub"}
 
+##' @method format local_remote
+##' @export
 format.local_remote <- function(x, ...) {"local"}
 
 #adapted from, `remotes::parse_one_extra`

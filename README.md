@@ -8,8 +8,7 @@
 [![natverse](https://img.shields.io/badge/natverse-Part%20of%20the%20natverse-a241b6)](https://natverse.github.io)
 [![GitHub](https://img.shields.io/github/v/release/natverse/natverse)](https://github.com/natverse/natverse/releases/)
 [![Docs](https://img.shields.io/badge/docs-100%25-brightgreen.svg)](https://natverse.github.io/natverse/reference/)
-[![Travis build
-status](https://travis-ci.org/natverse/natverse.svg?branch=master)](https://travis-ci.org/natverse/natverse)
+[![R-CMD-check](https://github.com/natverse/natverse/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/natverse/natverse/actions/workflows/R-CMD-check.yaml)
 [![Coveralls test
 coverage](https://coveralls.io/repos/github/natverse/natverse/badge.svg)](https://coveralls.io/r/natverse/natverse?branch=master)
 <!-- badges: end -->

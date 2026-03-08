@@ -34,8 +34,24 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   #Get details of the dependencies of the main package here ('natverse') that has been installed in this machine
   #The first level dependencies that exists both on CRAN and GitHub..
   #For e.g. for `natverse` -> `fafbseg`,`fishatlas`,`insectbrainr` etc.
-  pkgstatus_df <- remotes::dev_package_deps(suppressWarnings(find.package("natverse", ...)),
-                                            dependencies = recursive)
+  pkg_path <- suppressWarnings(find.package("natverse", ...))
+  pkgstatus_df <- tryCatch(
+    remotes::dev_package_deps(pkg_path, dependencies = recursive),
+    error = function(e) {
+      # Some CI environments expose an invalid GITHUB_PAT, which causes
+      # remotes GitHub lookups to fail with HTTP 401.
+      msg <- conditionMessage(e)
+      bad_pat <- grepl("HTTP error 401|Bad credentials", msg, ignore.case = TRUE)
+      if (bad_pat && nzchar(Sys.getenv("GITHUB_PAT"))) {
+        old_pat <- Sys.getenv("GITHUB_PAT")
+        on.exit(Sys.setenv(GITHUB_PAT = old_pat), add = TRUE)
+        Sys.unsetenv("GITHUB_PAT")
+        remotes::dev_package_deps(pkg_path, dependencies = recursive)
+      } else {
+        stop(e)
+      }
+    }
+  )
 
   ## The below code is only necessary as the remotes package ignores dependencies of non-cran packages (Github) at
   ##  the second level like `fafbsegdata` below..
@@ -111,8 +127,28 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   cranstatus_df <- get_remoteversions(cran_pkgs,'CRAN')
 
   #Checking github versions..
-  github_pkgs <- unlist(lapply(github_pkgslist, function(x) {paste0(x$remoteusername,'/',x$remoterepo)}))
-  githubstatus_df <- get_remoteversions(github_pkgs,'Github')
+  github_pkg_meta <- lapply(
+    github_pkgslist,
+    function(x) {
+      list(
+        package = x$package %||% NA_character_,
+        remote = paste0(x$remoteusername %||% "", "/", x$remoterepo %||% "")
+      )
+    }
+  )
+  github_pkgs <- unlist(lapply(github_pkg_meta, `[[`, "remote"), use.names = FALSE)
+  valid_github <- !is.na(github_pkgs) & nzchar(github_pkgs) & grepl("^[^/]+/[^/]+$", github_pkgs)
+
+  # Dependencies with unknown GitHub origin should be reported as local/unknown, not error.
+  invalid_github_pkgs <- unlist(lapply(github_pkg_meta[!valid_github], `[[`, "package"), use.names = FALSE)
+  invalid_github_pkgs <- invalid_github_pkgs[!is.na(invalid_github_pkgs) & nzchar(invalid_github_pkgs)]
+  localpkgs <- union(localpkgs, setdiff(invalid_github_pkgs, cran_pkgs))
+
+  githubstatus_df <- if (any(valid_github)) {
+    get_remoteversions(github_pkgs[valid_github], "Github")
+  } else {
+    package_deps_new_remotes()
+  }
 
   #Now finally append them all..
   allpkgstatus_df <- rbind(pkgstatus_df,cranstatus_df,githubstatus_df)
@@ -320,6 +356,23 @@ get_remoteversions <- function (pkgnames, pkgtype = c('CRAN','Github')){
 
   pkgtype <- match.arg(pkgtype)
 
+  remote_sha_safe <- function(x) {
+    tryCatch(
+      remotes::remote_sha(x),
+      error = function(e) {
+        msg <- conditionMessage(e)
+        bad_pat <- grepl("HTTP error 401|Bad credentials", msg, ignore.case = TRUE)
+        if (bad_pat && nzchar(Sys.getenv("GITHUB_PAT"))) {
+          old_pat <- Sys.getenv("GITHUB_PAT")
+          on.exit(Sys.setenv(GITHUB_PAT = old_pat), add = TRUE)
+          Sys.unsetenv("GITHUB_PAT")
+          return(remotes::remote_sha(x))
+        }
+        stop(e)
+      }
+    )
+  }
+
   #Convert the CRAN packages to remote to check for versions..
   if (pkgtype == 'CRAN'){
     cran_remt <- structure(lapply(pkgnames, package2pseudoremote, repos = getOption("repos"),
@@ -343,7 +396,7 @@ get_remoteversions <- function (pkgnames, pkgtype = c('CRAN','Github')){
 
     package <- vapply(git_remote, function(x) remotes::remote_package_name(x), character(1), USE.NAMES = FALSE)
     installed <- vapply(package, function(x) local_sha_remotes(x), character(1), USE.NAMES = FALSE)
-    available <- vapply(git_remote, function(x) remotes::remote_sha(x), character(1), USE.NAMES = FALSE)
+    available <- vapply(git_remote, remote_sha_safe, character(1), USE.NAMES = FALSE)
 
     diff <- installed == available
     diff <- ifelse(!is.na(diff) & diff, remotes_current, remotes_behind)
