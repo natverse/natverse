@@ -111,8 +111,28 @@ natverse_deps <- function(recursive = TRUE,verbose = TRUE, display_all = FALSE,.
   cranstatus_df <- get_remoteversions(cran_pkgs,'CRAN')
 
   #Checking github versions..
-  github_pkgs <- unlist(lapply(github_pkgslist, function(x) {paste0(x$remoteusername,'/',x$remoterepo)}))
-  githubstatus_df <- get_remoteversions(github_pkgs,'Github')
+  github_pkg_meta <- lapply(
+    github_pkgslist,
+    function(x) {
+      list(
+        package = x$package %||% NA_character_,
+        remote = paste0(x$remoteusername %||% "", "/", x$remoterepo %||% "")
+      )
+    }
+  )
+  github_pkgs <- unlist(lapply(github_pkg_meta, `[[`, "remote"), use.names = FALSE)
+  valid_github <- !is.na(github_pkgs) & nzchar(github_pkgs) & grepl("^[^/]+/[^/]+$", github_pkgs)
+
+  # Dependencies with unknown GitHub origin should be reported as local/unknown, not error.
+  invalid_github_pkgs <- unlist(lapply(github_pkg_meta[!valid_github], `[[`, "package"), use.names = FALSE)
+  invalid_github_pkgs <- invalid_github_pkgs[!is.na(invalid_github_pkgs) & nzchar(invalid_github_pkgs)]
+  localpkgs <- union(localpkgs, setdiff(invalid_github_pkgs, cran_pkgs))
+
+  githubstatus_df <- if (any(valid_github)) {
+    get_remoteversions(github_pkgs[valid_github], "Github")
+  } else {
+    package_deps_new_remotes()
+  }
 
   #Now finally append them all..
   allpkgstatus_df <- rbind(pkgstatus_df,cranstatus_df,githubstatus_df)
