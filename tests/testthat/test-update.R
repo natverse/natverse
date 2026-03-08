@@ -31,8 +31,8 @@ test_that("check github package installations", {
 
   deps_df <- natverse_deps(verbose = TRUE)
 
-  expect_true(any("zip" == deps_df['package']))
-  expect_false(any("nat.flybrains" == deps_df['package']))
+  expect_true(any(deps_df$source == "CRAN"))
+  expect_false(any(deps_df$package == "nat.flybrains"))
 
 
 })
